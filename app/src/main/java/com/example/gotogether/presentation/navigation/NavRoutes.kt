@@ -1,0 +1,10 @@
+package com.example.gotogether.presentation.navigation
+
+sealed class NavRoutes(val route: String) {
+    object Login : NavRoutes("login")
+    object Registration : NavRoutes("registration")
+    object Profile : NavRoutes("profile")
+    object MyTrips : NavRoutes("my_trips")
+    object Proposition : NavRoutes("proposition")
+    object SearchTrips : NavRoutes("search_trips")
+}
