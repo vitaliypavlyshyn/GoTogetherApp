@@ -14,19 +14,19 @@ import kotlin.collections.get
 
 @Composable
 fun ProfileScreen(
-    state: ProfileViewModel.UserState,
+    profileState: ProfileViewModel.UserState,
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        if (state.isLoading) {
+        if (profileState.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.run { align(Alignment.Center) }
             )
         } else {
-            val user = state.user
+            val user = profileState.user
             Column() {
                 Text(text = user?.firstName + " " + user?.lastName)
             }

@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.gotogether.presentation.screens.login_screen.LoginScreen
+import com.example.gotogether.presentation.screens.login_screen.LoginViewModel
 import com.example.gotogether.presentation.screens.my_trips_screen.MyTripsScreen
 import com.example.gotogether.presentation.screens.profile_screen.ProfileScreen
 import com.example.gotogether.presentation.screens.profile_screen.ProfileViewModel
@@ -29,9 +30,9 @@ fun NavigationController(
     ) {
         composable(NavRoutes.Profile.route) {
             val profileViewModel = hiltViewModel<ProfileViewModel>()
-            val state = profileViewModel.state.collectAsState()
+            val profileState = profileViewModel.state.collectAsState()
             ProfileScreen(
-                state = state.value,
+                profileState = profileState.value,
                 navController = navController
             )
         }
@@ -47,7 +48,9 @@ fun NavigationController(
             SearchTripsScreen()
         }
         composable(NavRoutes.Login.route) {
+            val loginViewModel = hiltViewModel<LoginViewModel>()
             LoginScreen(
+                loginViewModel = loginViewModel,
                 navController = navController
             )
         }

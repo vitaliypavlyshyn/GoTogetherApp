@@ -10,13 +10,13 @@ class AuthInterceptor @Inject constructor(
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token = sharedPreferences.getString("auth_token", "dbb62adc-d975-4724-bf1a-c7c2de9dc908")
+        val token = sharedPreferences.getString("auth_token", " ")
         if (token.isNullOrEmpty()) {
             throw Exception("No token available")
         }
 
         val newRequest = chain.request().newBuilder()
-            .addHeader("Authorization", "Bearer dbb62adc-d975-4724-bf1a-c7c2de9dc908")
+            .addHeader("Authorization", "Bearer $token")
             .build()
         return chain.proceed(newRequest)
     }

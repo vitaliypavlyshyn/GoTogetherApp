@@ -1,4 +1,4 @@
-package com.example.gotogether.presentation.components
+package com.example.gotogether.presentation.components.auth
 
 import androidx.compose.ui.text.input.ImeAction
 
@@ -9,7 +9,7 @@ enum class AuthParameter(
     val imeAction: ImeAction,
 ) {
     EMAIL(
-        focusedPlaceholder = "Введіть свій email тут...",
+        focusedPlaceholder = "Максимум 30 символів",
         unfocusedPlaceholder = "Введіть email",
         maxLength = 30,
         imeAction = ImeAction.Next),

@@ -1,4 +1,4 @@
-package com.example.gotogether.presentation.components
+package com.example.gotogether.presentation.components.auth
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -8,14 +8,14 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.gotogether.ui.theme.Purple
 import com.example.gotogether.ui.theme.PurpleGrey80
@@ -24,22 +24,25 @@ import com.example.gotogether.ui.theme.PurpleGrey80
 fun AuthTextField(
     input: MutableState<String>,
     inputFocusRequester: FocusRequester,
-    inputIsFocused: MutableState<Boolean>,
+    //inputIsFocused: MutableState<Boolean>,
     authParameter: AuthParameter,
     modifier: Modifier,
     keyboardActions: KeyboardActions,
+    onValueChange: (String) -> Unit
 ) {
-    val focusManager = LocalFocusManager.current
+    var isFocused by remember { mutableStateOf(false) }
+
     OutlinedTextField(
         value = input.value,
         onValueChange = {
             if (it.length <= authParameter.maxLength) {
                 input.value = it
+                onValueChange(it)
             }
         },
         placeholder = {
             Text(
-                if (inputIsFocused.value) authParameter.focusedPlaceholder
+                if (isFocused) authParameter.focusedPlaceholder
                 else authParameter.unfocusedPlaceholder
             )
         },
@@ -54,7 +57,7 @@ fun AuthTextField(
         modifier = modifier
             .focusRequester(inputFocusRequester)
             .onFocusChanged { focusState ->
-                inputIsFocused.value = focusState.isFocused
+                isFocused = focusState.isFocused
             },
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = authParameter.imeAction),
         keyboardActions = keyboardActions
