@@ -3,6 +3,7 @@ package com.example.gotogether.presentation.screens.trips_list_screen.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.gotogether.R
 import com.example.gotogether.domain.ChosenRoute
 import com.example.gotogether.domain.trip.Trip
@@ -51,6 +53,7 @@ import com.example.gotogether.utils.converter.TimeConverter
 
 @Composable
 fun TripCard(
+    navController: NavController,
     trip: Trip,
     modifier: Modifier = Modifier,
 ) {
@@ -64,7 +67,12 @@ fun TripCard(
         modifier = Modifier
             .clip(RoundedCornerShape(15.dp))
             .width(400.dp)
-            .height(160.dp),
+            .height(160.dp)
+            .clickable(
+                onClick = {
+                    navController.navigate("detailed_trip/${trip.tripId}")
+                }
+            ),
         border = BorderStroke(2.dp, PurpleGrey80),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(containerColor = if(areEnoughSeats.value) {

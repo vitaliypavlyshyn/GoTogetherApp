@@ -3,6 +3,7 @@ package com.example.gotogether.presentation.screens.trips_list_screen
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -97,6 +98,7 @@ fun TripsListScreen(
                         filteredTrips.size
                     ) { index ->
                         TripCard(
+                            navController = navController,
                             trip = filteredTrips[index]
                         )
                         Spacer(modifier = Modifier.height(8.dp))

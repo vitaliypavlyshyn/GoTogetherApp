@@ -1,0 +1,30 @@
+package com.example.gotogether.domain.trip
+
+data class DetailedTrip(
+    val tripId: Long?,
+    val driverUuid: String,
+    val driverFirstName: String,
+    val driverLastName: String,
+    val driverPicture: ByteArray?,
+    val description: String?,
+    val distanceInMeters: Int,
+    val availableSeats: Int,
+    val status: String,
+    val price: Int,
+    val isFastConfirm: Boolean,
+    val carMake: String,
+    val carModel: String,
+    val startCity: String,
+    val startRegion: String,
+    val startLat: String,
+    val startLng: String,
+    val endCity: String,
+    val endRegion: String,
+    val endLat: String,
+    val endLng: String,
+    val startTime: String,
+    val endTime: String,
+    val avgRating: Double?,
+    val avgDrivingSkills: Double?,
+    val countReviews: Int
+)

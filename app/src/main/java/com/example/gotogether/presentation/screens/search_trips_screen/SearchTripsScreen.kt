@@ -47,6 +47,7 @@ import com.example.gotogether.ui.theme.DarkGray
 import com.example.gotogether.ui.theme.MediumGray
 import com.example.gotogether.ui.theme.Purple
 import com.example.gotogether.ui.theme.PurpleGrey80
+import com.example.gotogether.utils.converter.TimeConverter
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDate
@@ -61,17 +62,10 @@ fun SearchTripsScreen(
     modifier: Modifier = Modifier,
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
-    val formatter = remember {
-        DateTimeFormatter.ofPattern("d MMMM", Locale("uk", "UA"))
-    }
-    val timeZone = TimeZone.currentSystemDefault()
-    val currentDate = Clock.System.now().toLocalDateTime(timeZone).date
     val formattedDate = remember(ChosenRoute.dateTrip) {
-        when (ChosenRoute.dateTrip) {
-            currentDate -> "Сьогодні"
-            else -> ChosenRoute.dateTrip?.toJavaLocalDate()?.format(formatter) ?: ""
-        }
+        mutableStateOf(TimeConverter.todMMMM(ChosenRoute.dateTrip))
     }
+
     val isDialogOpen = remember { mutableStateOf(false) }
     val selectedSeats = remember { mutableStateOf(ChosenRoute.seatsCount) }
 
@@ -198,7 +192,7 @@ fun SearchTripsScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = formattedDate,
+                            text = formattedDate.value,
                             color = MediumGray,
                             fontWeight = FontWeight.Medium
                         )

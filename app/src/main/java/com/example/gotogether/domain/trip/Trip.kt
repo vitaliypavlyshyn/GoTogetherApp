@@ -5,6 +5,7 @@ data class Trip(
     val driverUuid: String,
     val driverFirstName: String,
     val driverLastName: String,
+    val driverPicture: ByteArray?,
     val startLocationCity: String,
     val startLocationRegion: String,
     val endLocationCity: String,

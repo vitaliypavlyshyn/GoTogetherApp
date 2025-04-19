@@ -1,6 +1,7 @@
 package com.example.gotogether.data.trip
 
 import com.example.gotogether.domain.trip.Trip
+import com.example.gotogether.utils.mapper.TimeMapper
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -8,8 +9,9 @@ import java.time.format.DateTimeFormatter
 data class TripDTO(
     val tripId: Long?,
     val driverUuid: String,
-    val firstName: String,
-    val lastName: String,
+    val driverFirstName: String,
+    val driverLastName: String,
+    val driverPicture: ByteArray?,
     val startLocationCity: String,
     val startLocationRegion: String,
     val endLocationCity: String,
@@ -26,22 +28,21 @@ data class TripDTO(
 )
 
 fun TripDTO.toDomain(): Trip {
-    val startUtcTime = ZonedDateTime.parse(startTime, DateTimeFormatter.ISO_DATE_TIME)
-    val endUtcTime = ZonedDateTime.parse(endTime, DateTimeFormatter.ISO_DATE_TIME)
-    val startKievTime = startUtcTime.withZoneSameInstant(ZoneId.of("Europe/Kiev")).toLocalDateTime()
-    val endKievTime = endUtcTime.withZoneSameInstant(ZoneId.of("Europe/Kiev")).toLocalDateTime()
+    val startKyivTime = TimeMapper.toDateWithTimeZone(startTime)
+    val endKyivTime = TimeMapper.toDateWithTimeZone(endTime)
 
     return Trip(
         tripId = tripId,
         driverUuid = driverUuid,
-        driverFirstName = firstName,
-        driverLastName = lastName,
+        driverFirstName = driverFirstName,
+        driverLastName = driverLastName,
+        driverPicture = driverPicture,
         startLocationCity = startLocationCity,
         startLocationRegion = startLocationRegion,
         endLocationCity = endLocationCity,
         endLocationRegion = endLocationRegion,
-        startTime = startKievTime.toString(),
-        endTime = endKievTime.toString(),
+        startTime = startKyivTime.toString(),
+        endTime = endKyivTime.toString(),
         distanceInMeters = distanceInMeters,
         availableSeats = availableSeats,
         status = status,

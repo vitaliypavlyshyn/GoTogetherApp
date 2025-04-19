@@ -3,12 +3,17 @@ package com.example.gotogether.presentation.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.gotogether.domain.RouteCoordinates
+import com.example.gotogether.presentation.screens.detailed_trip_screen.DetailedTripScreen
+import com.example.gotogether.presentation.screens.detailed_trip_screen.DetailedTripVewModel
+import com.example.gotogether.presentation.screens.google_maps_screen.GoogleMapsScreen
 import com.example.gotogether.presentation.screens.login_screen.LoginScreen
 import com.example.gotogether.presentation.screens.login_screen.LoginViewModel
 import com.example.gotogether.presentation.screens.my_trips_screen.MyTripsScreen
@@ -26,7 +31,7 @@ import com.example.gotogether.presentation.screens.validation_screens.ChooseLoca
 @Composable
 fun NavigationController(
     navController: NavHostController,
-    modifier: Modifier
+    modifier: Modifier,
 ) {
     NavHost(
         navController = navController,
@@ -89,6 +94,25 @@ fun NavigationController(
                 tripsListState = tripsListState.value,
                 navController = navController
             )
+        }
+        composable(NavRoutes.DetailedTrip.route + "/{tripId}") {
+            val detailedTripViewModel = hiltViewModel<DetailedTripVewModel>()
+            val detailedTripState = detailedTripViewModel.state.collectAsState()
+            DetailedTripScreen(
+                detailedTripState = detailedTripState.value,
+                navController = navController
+            )
+        }
+        composable(NavRoutes.GoogleMaps.route) {
+            val routeCoordinates = remember {
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.get<RouteCoordinates>("coordinates")
+            }
+
+            if (routeCoordinates != null) {
+                GoogleMapsScreen(routeCoordinates = routeCoordinates)
+            }
         }
     }
 }

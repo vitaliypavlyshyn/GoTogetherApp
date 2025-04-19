@@ -17,6 +17,7 @@ import com.example.gotogether.data.user.repository.UserRepository
 import com.example.gotogether.data.user.repository.UserRepositoryImpl
 import com.example.gotogether.domain.location.GetLocationsUseCase
 import com.example.gotogether.domain.login.LoginUseCase
+import com.example.gotogether.domain.trip.GetDetailedTripByIdUseCase
 import com.example.gotogether.domain.trip.GetTripsByDateUseCase
 import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
 import com.example.gotogether.domain.user.usecase.GetUserUseCase
@@ -51,7 +52,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://a363-46-173-105-195.ngrok-free.app")
+            .baseUrl("https://dea1-46-173-105-195.ngrok-free.app")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -133,5 +134,11 @@ object AppModule {
     @Singleton
     fun provideGetTripsByDateUseCase(repository: TripRepository): GetTripsByDateUseCase {
         return GetTripsByDateUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetDetailedTripByIdUseCase(repository: TripRepository): GetDetailedTripByIdUseCase {
+        return GetDetailedTripByIdUseCase(repository)
     }
 }
