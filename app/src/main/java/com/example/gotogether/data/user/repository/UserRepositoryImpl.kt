@@ -12,4 +12,13 @@ class UserRepositoryImpl  @Inject constructor(
         val dto = api.getUserByUuid(userUuid)
         return dto.toDomain()
     }
+
+    override suspend fun getCurrentUser(): Result<User> {
+        return try {
+            val user = api.getCurrentUser()
+            Result.success(user.toDomain())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

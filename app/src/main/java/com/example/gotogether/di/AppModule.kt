@@ -3,13 +3,18 @@ package com.example.gotogether.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.gotogether.AuthInterceptor
+import com.example.gotogether.data.locations.LocationApiService
+import com.example.gotogether.data.locations.repository.LocationRepository
+import com.example.gotogether.data.locations.repository.LocationRepositoryImpl
 import com.example.gotogether.data.login.LoginApiService
 import com.example.gotogether.data.login.repository.LoginRepository
 import com.example.gotogether.data.login.repository.LoginRepositoryImpl
 import com.example.gotogether.data.user.UserApiService
 import com.example.gotogether.data.user.repository.UserRepository
 import com.example.gotogether.data.user.repository.UserRepositoryImpl
+import com.example.gotogether.domain.location.GetLocationsUseCase
 import com.example.gotogether.domain.login.LoginUseCase
+import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
 import com.example.gotogether.domain.user.usecase.GetUserUseCase
 import dagger.Module
 import dagger.Provides
@@ -42,7 +47,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://4043-46-173-105-195.ngrok-free.app")
+            .baseUrl("https://a363-46-173-105-195.ngrok-free.app")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -68,6 +73,12 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideGetCurrentUserUseCase(repository: UserRepository): GetCurrentUserUseCase {
+        return GetCurrentUserUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
     fun provideLoginApiService(retrofit: Retrofit): LoginApiService {
         return retrofit.create(LoginApiService::class.java)
     }
@@ -82,5 +93,23 @@ object AppModule {
     @Singleton
     fun provideLoginUseCase(repository: LoginRepository): LoginUseCase {
         return LoginUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationApiService(retrofit: Retrofit): LocationApiService {
+        return retrofit.create(LocationApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationRepository(api: LocationApiService): LocationRepository {
+        return LocationRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetLocationsUseCase(repository: LocationRepository): GetLocationsUseCase {
+        return GetLocationsUseCase(repository)
     }
 }

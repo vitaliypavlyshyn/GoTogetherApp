@@ -16,7 +16,10 @@ import com.example.gotogether.presentation.screens.profile_screen.ProfileScreen
 import com.example.gotogether.presentation.screens.profile_screen.ProfileViewModel
 import com.example.gotogether.presentation.screens.proposition_screens.PropositionScreen
 import com.example.gotogether.presentation.screens.registration_screen.RegistrationScreen
+import com.example.gotogether.presentation.screens.validation_screens.ChooseEndCityScreen
+import com.example.gotogether.presentation.screens.validation_screens.ChooseStartCityScreen
 import com.example.gotogether.presentation.screens.search_trips_screen.SearchTripsScreen
+import com.example.gotogether.presentation.screens.validation_screens.ChooseLocationViewModel
 
 @Composable
 fun NavigationController(
@@ -25,7 +28,7 @@ fun NavigationController(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.Login.route,
+        startDestination = NavRoutes.SearchTrips.route,
         modifier = modifier
     ) {
         composable(NavRoutes.Profile.route) {
@@ -45,7 +48,9 @@ fun NavigationController(
             PropositionScreen()
         }
         composable(NavRoutes.SearchTrips.route) {
-            SearchTripsScreen()
+            SearchTripsScreen(
+                navController = navController
+            )
         }
         composable(NavRoutes.Login.route) {
             val loginViewModel = hiltViewModel<LoginViewModel>()
@@ -56,6 +61,22 @@ fun NavigationController(
         }
         composable(NavRoutes.Registration.route) {
             RegistrationScreen(
+                navController = navController
+            )
+        }
+        composable(NavRoutes.ChooseStartCity.route) {
+            val chooseLocationViewModel = hiltViewModel<ChooseLocationViewModel>()
+            val locationState = chooseLocationViewModel.state.collectAsState()
+            ChooseStartCityScreen(
+                locationState = locationState.value,
+                navController = navController
+            )
+        }
+        composable(NavRoutes.ChooseEndCity.route) {
+            val chooseLocationViewModel = hiltViewModel<ChooseLocationViewModel>()
+            val locationState = chooseLocationViewModel.state.collectAsState()
+            ChooseEndCityScreen(
+                locationState = locationState.value,
                 navController = navController
             )
         }

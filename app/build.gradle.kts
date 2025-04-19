@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.gotogether"
-        minSdk = 25
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -48,6 +48,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.4.0-alpha07")
     implementation("androidx.compose.material:material-icons-extended")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     
     implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.9.0")
 

@@ -177,7 +177,7 @@ fun LoginScreen(
                 Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
 
                 if (result.success) {
-                    navController.navigate("profile") {
+                    navController.navigate("search_trips") {
                         popUpTo("login") { inclusive = true }
                     }
                 }

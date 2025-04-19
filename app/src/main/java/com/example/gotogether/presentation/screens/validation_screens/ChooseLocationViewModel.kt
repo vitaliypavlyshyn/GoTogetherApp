@@ -1,10 +1,9 @@
-package com.example.gotogether.presentation.screens.profile_screen
+package com.example.gotogether.presentation.screens.validation_screens
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gotogether.domain.user.User
-import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
+import com.example.gotogether.domain.location.GetLocationsUseCase
+import com.example.gotogether.domain.location.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,10 +12,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(
-    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+class ChooseLocationViewModel @Inject constructor(
+    private val getLocationsUseCase: GetLocationsUseCase
 ): ViewModel() {
-    private val _state = MutableStateFlow(UserState())
+    private val _state = MutableStateFlow(LocationsState())
     val state = _state.asStateFlow()
 
     init {
@@ -28,20 +27,19 @@ class ProfileViewModel @Inject constructor(
             }
             _state.update {
                 it.copy(
-                    user = getCurrentUser(),
+                    locations = getLocations(),
                     isLoading = false
                 )
             }
         }
     }
 
-    suspend fun getCurrentUser(): Result<User>? {
-        return getCurrentUserUseCase.invoke()
-
+    suspend fun getLocations(): Result<List<Location>>? {
+        return getLocationsUseCase.invoke()
     }
 
-    data class UserState(
-        val user: Result<User>? = null,
+    data class LocationsState(
+        val locations: Result<List<Location>>? = null,
         val isLoading: Boolean = false
     )
 }
