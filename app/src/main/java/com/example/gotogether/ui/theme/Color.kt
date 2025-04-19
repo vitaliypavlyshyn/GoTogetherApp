@@ -18,3 +18,4 @@ val MediumGray = Color(0xFF444343)
 val DarkGray = Color(0xFF2D2D2D)
 
 val Light = Color(0xFFEEEEEE)
+val DarkWhite = Color(0xFFD4D7D4)

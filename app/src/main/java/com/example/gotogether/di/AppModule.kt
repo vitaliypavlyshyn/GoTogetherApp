@@ -9,11 +9,15 @@ import com.example.gotogether.data.locations.repository.LocationRepositoryImpl
 import com.example.gotogether.data.login.LoginApiService
 import com.example.gotogether.data.login.repository.LoginRepository
 import com.example.gotogether.data.login.repository.LoginRepositoryImpl
+import com.example.gotogether.data.trip.TripApiService
+import com.example.gotogether.data.trip.repository.TripRepository
+import com.example.gotogether.data.trip.repository.TripRepositoryImpl
 import com.example.gotogether.data.user.UserApiService
 import com.example.gotogether.data.user.repository.UserRepository
 import com.example.gotogether.data.user.repository.UserRepositoryImpl
 import com.example.gotogether.domain.location.GetLocationsUseCase
 import com.example.gotogether.domain.login.LoginUseCase
+import com.example.gotogether.domain.trip.GetTripsByDateUseCase
 import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
 import com.example.gotogether.domain.user.usecase.GetUserUseCase
 import dagger.Module
@@ -111,5 +115,23 @@ object AppModule {
     @Singleton
     fun provideGetLocationsUseCase(repository: LocationRepository): GetLocationsUseCase {
         return GetLocationsUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTripApiService(retrofit: Retrofit): TripApiService {
+        return retrofit.create(TripApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTripRepository(api: TripApiService): TripRepository {
+        return TripRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetTripsByDateUseCase(repository: TripRepository): GetTripsByDateUseCase {
+        return GetTripsByDateUseCase(repository)
     }
 }

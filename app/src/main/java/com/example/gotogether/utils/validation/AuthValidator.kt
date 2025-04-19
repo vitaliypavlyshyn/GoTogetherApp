@@ -1,11 +1,13 @@
-package com.example.gotogether.validation
+package com.example.gotogether.utils.validation
+
+import android.util.Patterns
 
 object AuthValidator {
     fun validateEmail(input: String): String? =
         when {
             input.isBlank() -> "Email не може бути порожнім"
             input.length > 30 -> "Email не має перевищувати 30 символів"
-            !android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches() ->
+            !Patterns.EMAIL_ADDRESS.matcher(input).matches() ->
                 "Неправильний формат email"
 
             else -> null

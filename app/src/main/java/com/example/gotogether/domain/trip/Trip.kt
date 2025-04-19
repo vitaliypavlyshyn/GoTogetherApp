@@ -3,8 +3,8 @@ package com.example.gotogether.domain.trip
 data class Trip(
     val tripId: Long?,
     val driverUuid: String,
-    val firstName: String,
-    val lastName: String,
+    val driverFirstName: String,
+    val driverLastName: String,
     val startLocationCity: String,
     val startLocationRegion: String,
     val endLocationCity: String,

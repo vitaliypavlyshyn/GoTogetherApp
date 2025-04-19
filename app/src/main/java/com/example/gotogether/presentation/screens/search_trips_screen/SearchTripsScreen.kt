@@ -235,7 +235,7 @@ fun SearchTripsScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
                         onClick = {
-
+                            navController.navigate("trips_list")
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(

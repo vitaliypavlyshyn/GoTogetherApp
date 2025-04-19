@@ -19,6 +19,8 @@ import com.example.gotogether.presentation.screens.registration_screen.Registrat
 import com.example.gotogether.presentation.screens.validation_screens.ChooseEndCityScreen
 import com.example.gotogether.presentation.screens.validation_screens.ChooseStartCityScreen
 import com.example.gotogether.presentation.screens.search_trips_screen.SearchTripsScreen
+import com.example.gotogether.presentation.screens.trips_list_screen.TripsListScreen
+import com.example.gotogether.presentation.screens.trips_list_screen.TripsListViewModel
 import com.example.gotogether.presentation.screens.validation_screens.ChooseLocationViewModel
 
 @Composable
@@ -28,7 +30,7 @@ fun NavigationController(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.SearchTrips.route,
+        startDestination = NavRoutes.TripsList.route,
         modifier = modifier
     ) {
         composable(NavRoutes.Profile.route) {
@@ -77,6 +79,14 @@ fun NavigationController(
             val locationState = chooseLocationViewModel.state.collectAsState()
             ChooseEndCityScreen(
                 locationState = locationState.value,
+                navController = navController
+            )
+        }
+        composable(NavRoutes.TripsList.route) {
+            val tripsListViewModel = hiltViewModel<TripsListViewModel>()
+            val tripsListState = tripsListViewModel.state.collectAsState()
+            TripsListScreen(
+                tripsListState = tripsListState.value,
                 navController = navController
             )
         }

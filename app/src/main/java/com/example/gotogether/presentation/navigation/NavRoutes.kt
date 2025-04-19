@@ -9,4 +9,5 @@ sealed class NavRoutes(val route: String) {
     object SearchTrips : NavRoutes("search_trips")
     object ChooseStartCity : NavRoutes("choose_start_city")
     object ChooseEndCity : NavRoutes("choose_end_city")
+    object TripsList : NavRoutes("trips_list")
 }

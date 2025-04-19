@@ -1,12 +1,10 @@
 package com.example.gotogether.presentation.screens.login_screen
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -43,7 +41,7 @@ import com.example.gotogether.presentation.components.auth.AuthParameter
 import com.example.gotogether.presentation.components.auth.AuthTextField
 import com.example.gotogether.ui.theme.DarkGreen
 import com.example.gotogether.ui.theme.Purple
-import com.example.gotogether.validation.AuthValidator
+import com.example.gotogether.utils.validation.AuthValidator
 
 @Composable
 fun LoginScreen(

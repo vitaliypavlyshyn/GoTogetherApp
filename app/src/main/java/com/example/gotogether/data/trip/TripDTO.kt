@@ -1,6 +1,9 @@
 package com.example.gotogether.data.trip
 
 import com.example.gotogether.domain.trip.Trip
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 data class TripDTO(
     val tripId: Long?,
@@ -23,17 +26,22 @@ data class TripDTO(
 )
 
 fun TripDTO.toDomain(): Trip {
+    val startUtcTime = ZonedDateTime.parse(startTime, DateTimeFormatter.ISO_DATE_TIME)
+    val endUtcTime = ZonedDateTime.parse(endTime, DateTimeFormatter.ISO_DATE_TIME)
+    val startKievTime = startUtcTime.withZoneSameInstant(ZoneId.of("Europe/Kiev")).toLocalDateTime()
+    val endKievTime = endUtcTime.withZoneSameInstant(ZoneId.of("Europe/Kiev")).toLocalDateTime()
+
     return Trip(
         tripId = tripId,
         driverUuid = driverUuid,
-        firstName = firstName,
-        lastName = lastName,
+        driverFirstName = firstName,
+        driverLastName = lastName,
         startLocationCity = startLocationCity,
         startLocationRegion = startLocationRegion,
         endLocationCity = endLocationCity,
         endLocationRegion = endLocationRegion,
-        startTime = startTime,
-        endTime = endTime,
+        startTime = startKievTime.toString(),
+        endTime = endKievTime.toString(),
         distanceInMeters = distanceInMeters,
         availableSeats = availableSeats,
         status = status,
