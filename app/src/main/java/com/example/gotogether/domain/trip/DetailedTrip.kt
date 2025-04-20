@@ -6,6 +6,7 @@ data class DetailedTrip(
     val driverFirstName: String,
     val driverLastName: String,
     val driverPicture: ByteArray?,
+    val driverPhoneNumber: String?,
     val description: String?,
     val distanceInMeters: Int,
     val availableSeats: Int,

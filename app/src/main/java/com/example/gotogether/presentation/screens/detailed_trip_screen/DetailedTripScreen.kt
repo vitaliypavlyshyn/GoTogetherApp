@@ -1,5 +1,6 @@
 package com.example.gotogether.presentation.screens.detailed_trip_screen
 
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,27 +47,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.gotogether.R
-import com.example.gotogether.domain.ChosenRoute
 import com.example.gotogether.domain.RouteCoordinates
-import com.example.gotogether.presentation.navigation.NavRoutes
+import com.example.gotogether.presentation.screens.detailed_trip_screen.components.PassengersColumn
 import com.example.gotogether.ui.theme.DarkGray
 import com.example.gotogether.ui.theme.DarkGreen
 import com.example.gotogether.ui.theme.MediumGray
 import com.example.gotogether.ui.theme.Purple
 import com.example.gotogether.ui.theme.PurpleGrey80
-import com.example.gotogether.utils.converter.TimeConverter
+import com.example.gotogether.utils.formatter.TimeFormatter
+import androidx.core.net.toUri
+import com.example.gotogether.utils.extentions.roundTo2DecimalPlaces
+import com.example.gotogether.utils.formatter.DistanceFormatter
 
 @Composable
 fun DetailedTripScreen(
     detailedTripState: DetailedTripVewModel.DetailedTripState,
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier.fillMaxSize()
@@ -77,13 +81,14 @@ fun DetailedTripScreen(
             )
         } else {
             detailedTripState.detailedTrip?.onSuccess { trip ->
+                val context = LocalContext.current
                 val interactionSource = remember { MutableInteractionSource() }
                 val isPressed = interactionSource.collectIsPressedAsState()
                 val backgroundColor =
                     if (isPressed.value) Color(0x1A004D40) else Color.Transparent
                 val contentColor = if (isPressed.value) DarkGreen.copy(alpha = 0.6f) else DarkGreen
                 val formattedDate = remember(trip.startTime) {
-                    mutableStateOf(TimeConverter.todMMMM(trip.startTime))
+                    mutableStateOf(TimeFormatter.formatFullUkrainianDate(trip.startTime))
                 }
                 Box(
                     modifier = Modifier
@@ -99,7 +104,7 @@ fun DetailedTripScreen(
                     ) {
                         IconButton(
                             onClick = {
-
+                                navController.popBackStack()
                             }
                         ) {
                             Icon(
@@ -108,7 +113,7 @@ fun DetailedTripScreen(
                                 tint = Purple
                             )
                         }
-                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = formattedDate.value,
                             fontWeight = FontWeight.Bold,
@@ -138,20 +143,20 @@ fun DetailedTripScreen(
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Column {
                                     Text(
-                                        text = TimeConverter.toHHmm(trip.startTime),
+                                        text = TimeFormatter.toHHmm(trip.startTime),
                                         color = MediumGray,
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.Medium
                                     )
                                     Text(
-                                        text = "71 км",
+                                        text = "${DistanceFormatter.formatDistanceInKm(trip.distanceInMeters)} км",
                                         color = MediumGray,
                                         fontSize = 10.sp,
                                     )
                                 }
                                 Spacer(modifier = Modifier.height(12.dp))
                                 Text(
-                                    text = TimeConverter.toHHmm(trip.endTime),
+                                    text = TimeFormatter.toHHmm(trip.endTime),
                                     color = MediumGray,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Medium
@@ -188,7 +193,7 @@ fun DetailedTripScreen(
                             }
                         }
                         HorizontalDivider(
-                            thickness = 10.dp
+                            thickness = 8.dp
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(modifier = Modifier.padding(start = 18.dp, end = 18.dp).height(32.dp)) {
@@ -207,7 +212,7 @@ fun DetailedTripScreen(
                             )
                         }
                         HorizontalDivider(
-                            thickness = 10.dp
+                            thickness = 8.dp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(
@@ -216,7 +221,7 @@ fun DetailedTripScreen(
                                 .padding(start = 16.dp, end = 16.dp)
                                 .clickable(
                                     onClick = {
-
+                                        navController.navigate("user_profile/${trip.driverUuid}")
                                     }
                                 )
                         ) {
@@ -250,7 +255,7 @@ fun DetailedTripScreen(
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    if (trip.avgDrivingSkills != null) {
+                                    if (trip.avgRating != null) {
                                         Icon(
                                             imageVector = Icons.Default.Star,
                                             contentDescription = "star",
@@ -258,7 +263,7 @@ fun DetailedTripScreen(
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Text(
-                                            text = "${trip.avgDrivingSkills} - ${trip.countReviews} відгуки",
+                                            text = "${trip.avgRating.roundTo2DecimalPlaces()}/5 - ${trip.countReviews} відгуки",
                                             color = DarkGray,
                                             fontSize = 14.sp,
                                             fontWeight = FontWeight.Normal
@@ -332,97 +337,61 @@ fun DetailedTripScreen(
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Button(
-                                onClick = { /* Дія */ },
-                                interactionSource = interactionSource,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = backgroundColor,
-                                    contentColor = contentColor
-                                ),
-                                border = BorderStroke(1.dp, DarkGreen),
-                                modifier = Modifier.height(50.dp)
+                        if(trip.driverPhoneNumber != null) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Call,
-                                    contentDescription = "call",
-                                    tint = DarkGreen
-                                )
-                                Spacer(modifier = Modifier.width(5.dp))
-                                Text(
-                                    text = "Подзвонити до ${trip.driverFirstName}",
-                                    color = DarkGreen,
-                                    fontWeight = FontWeight.Medium
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                        HorizontalDivider(
-                            thickness = 10.dp
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "Пасажири",
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MediumGray,
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, end = 16.dp)
-                                .clickable(
+                                Button(
                                     onClick = {
-
-                                    }
-                                )
-                        ) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Box(
-                                modifier = Modifier
-                                    .size(52.dp)
-                                    .clip(CircleShape)
-
-                            ) {
-                                Image(
-                                    painter = painterResource(R.drawable.tuqui),
-                                    contentDescription = "avatar",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.fillMaxSize()
-                                )
+                                        val intent = Intent(Intent.ACTION_DIAL).apply {
+                                            data = "tel:${trip.driverPhoneNumber}".toUri()
+                                        }
+                                        context.startActivity(intent)
+                                    },
+                                    interactionSource = interactionSource,
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = backgroundColor,
+                                        contentColor = contentColor
+                                    ),
+                                    border = BorderStroke(1.dp, DarkGreen),
+                                    modifier = Modifier.height(50.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Call,
+                                        contentDescription = "call",
+                                        tint = DarkGreen
+                                    )
+                                    Spacer(modifier = Modifier.width(5.dp))
+                                    Text(
+                                        text = "Подзвонити до ${trip.driverFirstName}",
+                                        color = DarkGreen,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
                             }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Column() {
-                                Text(
-                                    text = "Віталік",
-                                    color = DarkGray,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
-                                Text(
-                                    text = "Львів → Шептицький (+1)",
-                                    color = DarkGray,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Normal
-                                )
-                            }
-                            Spacer(modifier = Modifier.weight(1f))
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = "right",
-                                tint = DarkGray
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+                        HorizontalDivider(
+                            thickness = 8.dp
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        detailedTripState.passengers?.onSuccess { passengers ->
+                           if(passengers.isNotEmpty()) {
+                               PassengersColumn(
+                                   passengers = passengers,
+                                   navController = navController
+                               )
+                           }
+                        }?.onFailure {
+                            Text(
+                                "Не вдалось завантажити дані про пасажирів"
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         HorizontalDivider(
-                            thickness = 10.dp
+                            thickness = 8.dp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(
@@ -450,7 +419,7 @@ fun DetailedTripScreen(
                                 color = DarkGreen
                             )
                         }
-                        Spacer(modifier = Modifier.height(100.dp))
+                        Spacer(modifier = Modifier.height(90.dp))
                     }
 
                     Button(

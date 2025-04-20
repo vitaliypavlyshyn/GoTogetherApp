@@ -1,8 +1,7 @@
-package com.example.gotogether.data.locations.repository
+package com.example.gotogether.data.location.repository
 
-import com.example.gotogether.data.locations.LocationApiService
-import com.example.gotogether.data.locations.toDomainList
-import com.example.gotogether.data.user.toDomain
+import com.example.gotogether.data.location.LocationApiService
+import com.example.gotogether.data.location.toDomainList
 import com.example.gotogether.domain.location.Location
 import javax.inject.Inject
 

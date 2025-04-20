@@ -1,5 +1,6 @@
 package com.example.gotogether.data.google_maps_route
 
+import com.example.gotogether.config.API_KEY
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 import kotlinx.coroutines.Dispatchers

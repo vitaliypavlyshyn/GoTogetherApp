@@ -12,4 +12,6 @@ sealed class NavRoutes(val route: String) {
     object TripsList : NavRoutes("trips_list")
     object DetailedTrip : NavRoutes("detailed_trip")
     object GoogleMaps : NavRoutes("google_maps")
+    object UserProfile : NavRoutes("user_profile")
+    object Reviews : NavRoutes("reviews")
 }

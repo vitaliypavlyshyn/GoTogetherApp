@@ -1,6 +1,5 @@
-package com.example.gotogether.data.locations
+package com.example.gotogether.data.location
 
-import com.example.gotogether.data.user.UserDTO
 import retrofit2.http.GET
 
 interface LocationApiService {

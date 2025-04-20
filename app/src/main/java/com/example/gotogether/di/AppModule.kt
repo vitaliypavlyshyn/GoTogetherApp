@@ -3,24 +3,33 @@ package com.example.gotogether.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.gotogether.AuthInterceptor
-import com.example.gotogether.data.locations.LocationApiService
-import com.example.gotogether.data.locations.repository.LocationRepository
-import com.example.gotogether.data.locations.repository.LocationRepositoryImpl
+import com.example.gotogether.data.location.LocationApiService
+import com.example.gotogether.data.location.repository.LocationRepository
+import com.example.gotogether.data.location.repository.LocationRepositoryImpl
 import com.example.gotogether.data.login.LoginApiService
 import com.example.gotogether.data.login.repository.LoginRepository
 import com.example.gotogether.data.login.repository.LoginRepositoryImpl
+import com.example.gotogether.data.review.ReviewApiService
+import com.example.gotogether.data.review.repository.ReviewRepository
+import com.example.gotogether.data.review.repository.ReviewRepositoryImpl
 import com.example.gotogether.data.trip.TripApiService
 import com.example.gotogether.data.trip.repository.TripRepository
 import com.example.gotogether.data.trip.repository.TripRepositoryImpl
+import com.example.gotogether.data.trip_passenger.TripPassengerApiService
+import com.example.gotogether.data.trip_passenger.repository.TripPassengerRepository
+import com.example.gotogether.data.trip_passenger.repository.TripPassengerRepositoryImpl
 import com.example.gotogether.data.user.UserApiService
 import com.example.gotogether.data.user.repository.UserRepository
 import com.example.gotogether.data.user.repository.UserRepositoryImpl
 import com.example.gotogether.domain.location.GetLocationsUseCase
 import com.example.gotogether.domain.login.LoginUseCase
+import com.example.gotogether.domain.review.GetRatingUseCase
+import com.example.gotogether.domain.review.GetReviewsUseCase
 import com.example.gotogether.domain.trip.GetDetailedTripByIdUseCase
 import com.example.gotogether.domain.trip.GetTripsByDateUseCase
+import com.example.gotogether.domain.trip_passenger.GetPassengersByTripIdUseCase
 import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
-import com.example.gotogether.domain.user.usecase.GetUserUseCase
+import com.example.gotogether.domain.user.usecase.GetUserByUuidUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,7 +61,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://dea1-46-173-105-195.ngrok-free.app")
+            .baseUrl("https://d989-46-173-105-195.ngrok-free.app")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -72,8 +81,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetUserUseCase(repository: UserRepository): GetUserUseCase {
-        return GetUserUseCase(repository)
+    fun provideGetUserByUuidUseCase(repository: UserRepository): GetUserByUuidUseCase {
+        return GetUserByUuidUseCase(repository)
     }
 
     @Provides
@@ -140,5 +149,47 @@ object AppModule {
     @Singleton
     fun provideGetDetailedTripByIdUseCase(repository: TripRepository): GetDetailedTripByIdUseCase {
         return GetDetailedTripByIdUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTripPassengerApiService(retrofit: Retrofit): TripPassengerApiService {
+        return retrofit.create(TripPassengerApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTripPassengerRepository(api: TripPassengerApiService): TripPassengerRepository {
+        return TripPassengerRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetPassengersByTripIdUseCase(repository: TripPassengerRepository): GetPassengersByTripIdUseCase {
+        return GetPassengersByTripIdUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReviewApiService(retrofit: Retrofit): ReviewApiService {
+        return retrofit.create(ReviewApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReviewRepository(api: ReviewApiService): ReviewRepository {
+        return ReviewRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetReviewsUseCase(repository: ReviewRepository): GetReviewsUseCase {
+        return GetReviewsUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetRatingUseCase(repository: ReviewRepositoryImpl): GetRatingUseCase {
+        return GetRatingUseCase(repository)
     }
 }

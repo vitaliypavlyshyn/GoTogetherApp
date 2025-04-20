@@ -1,4 +1,4 @@
-package com.example.gotogether.data.locations
+package com.example.gotogether.data.location
 
 import com.example.gotogether.domain.location.Location
 

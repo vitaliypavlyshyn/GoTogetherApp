@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.gotogether.config.API_KEY
 import com.example.gotogether.data.google_maps_route.fetchRoute
 import com.example.gotogether.domain.RouteCoordinates
@@ -41,6 +42,7 @@ import java.net.URL
 @Composable
 fun GoogleMapsScreen(
     routeCoordinates: RouteCoordinates,
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     val startLatLng = LatLng(routeCoordinates.startLat.toDouble(), routeCoordinates.startLng.toDouble())
@@ -63,7 +65,7 @@ fun GoogleMapsScreen(
     Column {
         IconButton(
             onClick = {
-
+                navController.popBackStack()
             },
             modifier = Modifier.padding(8.dp)
         ) {

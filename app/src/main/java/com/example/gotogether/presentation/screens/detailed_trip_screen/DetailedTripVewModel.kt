@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gotogether.domain.trip.DetailedTrip
 import com.example.gotogether.domain.trip.GetDetailedTripByIdUseCase
+import com.example.gotogether.domain.trip_passenger.GetPassengersByTripIdUseCase
+import com.example.gotogether.domain.trip_passenger.TripPassenger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +19,7 @@ import kotlin.text.toIntOrNull
 @HiltViewModel
 class DetailedTripVewModel @Inject constructor(
     private val getDetailedTripByIdUseCase: GetDetailedTripByIdUseCase,
+    private val getPassengersByTripIdUseCase: GetPassengersByTripIdUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val _state = MutableStateFlow(DetailedTripState())
@@ -34,6 +37,7 @@ class DetailedTripVewModel @Inject constructor(
             _state.update {
                 it.copy(
                     detailedTrip = getDetailedTrip(tripId),
+                    passengers = getPassengers(tripId),
                     isLoading = false
                 )
             }
@@ -41,9 +45,11 @@ class DetailedTripVewModel @Inject constructor(
     }
 
     suspend fun getDetailedTrip(tripId: Long) = getDetailedTripByIdUseCase(tripId)
+    suspend fun getPassengers(tripId: Long) = getPassengersByTripIdUseCase(tripId)
 
     data class DetailedTripState(
         val detailedTrip: Result<DetailedTrip>? = null,
+        val passengers: Result<List<TripPassenger>>? = null,
         val isLoading: Boolean = false,
     )
 }

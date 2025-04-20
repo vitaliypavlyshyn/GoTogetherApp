@@ -46,10 +46,10 @@ import com.example.gotogether.domain.trip.Trip
 import com.example.gotogether.ui.theme.DarkGray
 import com.example.gotogether.ui.theme.DarkGreen
 import com.example.gotogether.ui.theme.DarkWhite
-import com.example.gotogether.ui.theme.Light
 import com.example.gotogether.ui.theme.Purple
 import com.example.gotogether.ui.theme.PurpleGrey80
-import com.example.gotogether.utils.converter.TimeConverter
+import com.example.gotogether.utils.extentions.roundTo2DecimalPlaces
+import com.example.gotogether.utils.formatter.TimeFormatter
 
 @Composable
 fun TripCard(
@@ -74,7 +74,7 @@ fun TripCard(
                 }
             ),
         border = BorderStroke(2.dp, PurpleGrey80),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
         colors = CardDefaults.cardColors(containerColor = if(areEnoughSeats.value) {
             Color.White
         } else {
@@ -88,14 +88,14 @@ fun TripCard(
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = TimeConverter.toHHmm(trip.startTime),
+                        text = TimeFormatter.toHHmm(trip.startTime),
                         color = DarkGray,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = TimeConverter.toHHmm(trip.endTime),
+                        text = TimeFormatter.toHHmm(trip.endTime),
                         color = DarkGray,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
@@ -179,7 +179,7 @@ fun TripCard(
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
-                            text = trip.avgRating.toString(),
+                            text = trip.avgRating.roundTo2DecimalPlaces().toString(),
                             color = DarkGray,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium

@@ -1,6 +1,5 @@
 package com.example.gotogether.data.trip.repository
 
-import com.example.gotogether.data.locations.toDomainList
 import com.example.gotogether.data.trip.TripApiService
 import com.example.gotogether.data.trip.toDomain
 import com.example.gotogether.data.trip.toDomainList

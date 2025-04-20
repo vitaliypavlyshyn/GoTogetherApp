@@ -47,14 +47,9 @@ import com.example.gotogether.ui.theme.DarkGray
 import com.example.gotogether.ui.theme.MediumGray
 import com.example.gotogether.ui.theme.Purple
 import com.example.gotogether.ui.theme.PurpleGrey80
-import com.example.gotogether.utils.converter.TimeConverter
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
+import com.example.gotogether.utils.formatter.TimeFormatter
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toKotlinLocalDate
-import kotlinx.datetime.toLocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @Composable
 fun SearchTripsScreen(
@@ -63,7 +58,7 @@ fun SearchTripsScreen(
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val formattedDate = remember(ChosenRoute.dateTrip) {
-        mutableStateOf(TimeConverter.todMMMM(ChosenRoute.dateTrip))
+        mutableStateOf(TimeFormatter.todMMMM(ChosenRoute.dateTrip.toJavaLocalDate()))
     }
 
     val isDialogOpen = remember { mutableStateOf(false) }

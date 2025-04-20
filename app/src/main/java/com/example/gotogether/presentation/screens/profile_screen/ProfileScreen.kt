@@ -21,12 +21,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AddCircleOutline
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -45,6 +47,7 @@ import com.example.gotogether.ui.theme.DarkGreen
 import com.example.gotogether.ui.theme.MediumGray
 import com.example.gotogether.ui.theme.Purple
 import com.example.gotogether.ui.theme.PurpleGrey80
+import com.example.gotogether.utils.extentions.roundTo2DecimalPlaces
 
 
 @Composable
@@ -67,6 +70,7 @@ fun ProfileScreen(
                         .background(Color.White)
                         .fillMaxSize()
                 ) {
+                    Spacer(modifier = Modifier.height(15.dp))
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -113,7 +117,7 @@ fun ProfileScreen(
                                             tint = Purple
                                         )
                                         Text(
-                                            text = user.avgRating.toString(),
+                                            text = user.avgRating.roundTo2DecimalPlaces().toString(),
                                             fontSize = 16.sp,
                                             fontWeight = FontWeight.Medium,
                                             color = DarkGray,

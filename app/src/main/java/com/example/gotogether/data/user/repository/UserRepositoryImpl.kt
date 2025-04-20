@@ -8,9 +8,13 @@ import javax.inject.Inject
 class UserRepositoryImpl  @Inject constructor(
     private val api: UserApiService
 ) : UserRepository {
-    override suspend fun getUser(userUuid: String): User {
-        val dto = api.getUserByUuid(userUuid)
-        return dto.toDomain()
+    override suspend fun getUser(userUuid: String): Result<User> {
+        return try {
+            val user = api.getUserByUuid(userUuid)
+            Result.success(user.toDomain())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun getCurrentUser(): Result<User> {

@@ -1,7 +1,6 @@
-package com.example.gotogether.data.locations.repository
+package com.example.gotogether.data.location.repository
 
 import com.example.gotogether.domain.location.Location
-import com.example.gotogether.domain.user.User
 
 interface LocationRepository {
     suspend fun getLocations(): Result<List<Location>>
