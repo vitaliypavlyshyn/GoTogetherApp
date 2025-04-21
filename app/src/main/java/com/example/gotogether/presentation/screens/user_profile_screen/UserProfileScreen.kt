@@ -1,5 +1,6 @@
 package com.example.gotogether.presentation.screens.user_profile_screen
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,14 +33,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.gotogether.R
-import com.example.gotogether.presentation.screens.profile_screen.VerifiedField
+import com.example.gotogether.presentation.components.verified_fields.VerifiedField
 import com.example.gotogether.ui.theme.DarkGray
 import com.example.gotogether.ui.theme.DarkGreen
 import com.example.gotogether.ui.theme.MediumGray
@@ -63,6 +67,10 @@ fun UserProfileScreen(
             )
         } else {
             userState.user?.onSuccess { user ->
+                var createdAccountFormatDate: String = ""
+                if (user.createdAt != null) {
+                    createdAccountFormatDate = TimeFormatter.formatToMonthYear(user.createdAt)
+                }
                 Column(
                     modifier = Modifier
                         .background(Color.White)
@@ -102,8 +110,13 @@ fun UserProfileScreen(
                                     .padding(4.dp)
                                     .clip(CircleShape)
                             ) {
+                                val bitmap = user.pictureProfile?.let {
+                                    BitmapFactory.decodeByteArray(it, 0, it.size)
+                                }?.asImageBitmap()
+
                                 Image(
-                                    painter = painterResource(R.drawable.test_avatar),
+                                    bitmap = bitmap
+                                        ?: ImageBitmap.imageResource(id = R.drawable.test_avatar),
                                     contentDescription = "avatar",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier.fillMaxSize()
@@ -172,11 +185,11 @@ fun UserProfileScreen(
                         }
                     }
                     if (user.phoneNumber != null) {
-                    HorizontalDivider(
-                        thickness = 2.dp,
-                        color = PurpleGrey80,
-                        modifier = Modifier.padding(16.dp)
-                    )
+                        HorizontalDivider(
+                            thickness = 2.dp,
+                            color = PurpleGrey80,
+                            modifier = Modifier.padding(16.dp)
+                        )
                         VerifiedField(
                             text = "Підтверджений номер телефону",
                             modifier = Modifier.padding(start = 16.dp, end = 16.dp)
@@ -238,7 +251,7 @@ fun UserProfileScreen(
                                 }
                             )
                     ) {
-                        if(user.carId != null) {
+                        if (user.carId != null) {
                             Icon(
                                 imageVector = Icons.Default.DirectionsCar,
                                 contentDescription = "car_icon",
@@ -271,7 +284,7 @@ fun UserProfileScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(top = 8.dp, start = 16.dp, end = 16.dp)
+                            .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 8.dp)
                             .clickable(
                                 onClick = {
 
@@ -293,6 +306,19 @@ fun UserProfileScreen(
                             color = DarkGreen
                         )
                     }
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        thickness = 2.dp,
+                        color = PurpleGrey80
+                    )
+                    Text(
+                        text = "Дата реєстрації: $createdAccountFormatDate",
+                        color = MediumGray,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
                 }
             }?.onFailure {
                 Column(

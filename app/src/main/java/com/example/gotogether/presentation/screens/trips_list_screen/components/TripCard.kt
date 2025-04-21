@@ -65,7 +65,6 @@ fun TripCard(
     }
     Card(
         modifier = Modifier
-            .clip(RoundedCornerShape(15.dp))
             .width(400.dp)
             .height(160.dp)
             .clickable(
@@ -73,8 +72,9 @@ fun TripCard(
                     navController.navigate("detailed_trip/${trip.tripId}")
                 }
             ),
-        border = BorderStroke(2.dp, PurpleGrey80),
-        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
+        shape = RoundedCornerShape(15.dp),
+        border = BorderStroke(1.dp, PurpleGrey80),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(containerColor = if(areEnoughSeats.value) {
             Color.White
         } else {

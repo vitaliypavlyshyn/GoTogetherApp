@@ -3,6 +3,9 @@ package com.example.gotogether.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.gotogether.AuthInterceptor
+import com.example.gotogether.data.car.CarApiService
+import com.example.gotogether.data.car.repository.CarRepository
+import com.example.gotogether.data.car.repository.CarRepositoryImpl
 import com.example.gotogether.data.location.LocationApiService
 import com.example.gotogether.data.location.repository.LocationRepository
 import com.example.gotogether.data.location.repository.LocationRepositoryImpl
@@ -21,6 +24,7 @@ import com.example.gotogether.data.trip_passenger.repository.TripPassengerReposi
 import com.example.gotogether.data.user.UserApiService
 import com.example.gotogether.data.user.repository.UserRepository
 import com.example.gotogether.data.user.repository.UserRepositoryImpl
+import com.example.gotogether.domain.car.GetCarsUseCase
 import com.example.gotogether.domain.location.GetLocationsUseCase
 import com.example.gotogether.domain.login.LoginUseCase
 import com.example.gotogether.domain.review.GetRatingUseCase
@@ -30,6 +34,7 @@ import com.example.gotogether.domain.trip.GetTripsByDateUseCase
 import com.example.gotogether.domain.trip_passenger.GetPassengersByTripIdUseCase
 import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
 import com.example.gotogether.domain.user.usecase.GetUserByUuidUseCase
+import com.example.gotogether.domain.user.usecase.UpdateUserUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,7 +66,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://d989-46-173-105-195.ngrok-free.app")
+            .baseUrl("https://bafe-46-173-105-195.ngrok-free.app")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -83,6 +88,12 @@ object AppModule {
     @Singleton
     fun provideGetUserByUuidUseCase(repository: UserRepository): GetUserByUuidUseCase {
         return GetUserByUuidUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdateUserUseCase(repository: UserRepository): UpdateUserUseCase {
+        return UpdateUserUseCase(repository)
     }
 
     @Provides
@@ -191,5 +202,23 @@ object AppModule {
     @Singleton
     fun provideGetRatingUseCase(repository: ReviewRepositoryImpl): GetRatingUseCase {
         return GetRatingUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCarApiService(retrofit: Retrofit): CarApiService {
+        return retrofit.create(CarApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCarRepository(api: CarApiService): CarRepository {
+        return CarRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetCarsUseCase(repository: CarRepository): GetCarsUseCase {
+        return GetCarsUseCase(repository)
     }
 }

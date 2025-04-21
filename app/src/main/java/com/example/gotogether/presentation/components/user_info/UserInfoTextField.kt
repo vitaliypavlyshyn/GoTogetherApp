@@ -1,15 +1,8 @@
-package com.example.gotogether.presentation.components.auth
+package com.example.gotogether.presentation.components.user_info
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.RemoveCircleOutline
-import androidx.compose.material.icons.filled.TaskAlt
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -19,26 +12,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.gotogether.ui.theme.MediumGray
 import com.example.gotogether.ui.theme.Purple
 import com.example.gotogether.ui.theme.PurpleGrey80
 
 @Composable
-fun AuthTextField(
+fun UserInfoTextField(
     input: MutableState<String>,
     inputFocusRequester: FocusRequester,
     //inputIsFocused: MutableState<Boolean>,
-    authParameter: AuthParameter,
-    modifier: Modifier,
+    singleLine: Boolean = true,
+    userInfoParameter: UserInfoParameter,
+    modifier: Modifier = Modifier,
     keyboardActions: KeyboardActions,
     onValueChange: (String) -> Unit
 ) {
@@ -47,18 +36,18 @@ fun AuthTextField(
     OutlinedTextField(
         value = input.value,
         onValueChange = {
-            if (it.length <= authParameter.maxLength) {
+            if (it.length <= userInfoParameter.maxLength) {
                 input.value = it
                 onValueChange(it)
             }
         },
         placeholder = {
             Text(
-                if (isFocused) authParameter.focusedPlaceholder
-                else authParameter.unfocusedPlaceholder
+                if (isFocused) userInfoParameter.focusedPlaceholder
+                else userInfoParameter.unfocusedPlaceholder,
             )
         },
-        singleLine = true,
+        singleLine = singleLine,
         shape = RoundedCornerShape(15.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = PurpleGrey80.copy(alpha = 0.3f),
@@ -71,7 +60,7 @@ fun AuthTextField(
             .onFocusChanged { focusState ->
                 isFocused = focusState.isFocused
             },
-        keyboardOptions = KeyboardOptions.Default.copy(imeAction = authParameter.imeAction),
+        keyboardOptions = KeyboardOptions.Default.copy(imeAction = userInfoParameter.imeAction),
         keyboardActions = keyboardActions
     )
 }

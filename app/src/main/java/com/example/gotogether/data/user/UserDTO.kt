@@ -5,6 +5,7 @@ import com.example.gotogether.domain.user.User
 data class UserDTO(
     val userUuid: String,
     val carId: Long?,
+    val email: String?,
     val make: String?,
     val model: String?,
     val pictureProfile: ByteArray?,
@@ -13,16 +14,17 @@ data class UserDTO(
     val dateOfBirth: String,
     val phoneNumber: String?,
     val description: String?,
-    val gender: String,
     val avgRating: Double?,
     val avgDrivingSkills: Double?,
-    val countReviews: Int
+    val countReviews: Int,
+    val createdAt: String?
 )
 
 fun UserDTO.toDomain(): User {
     return User(
         userUuid = userUuid,
         carId = carId,
+        email = email,
         make = make,
         model = model,
         pictureProfile = pictureProfile,
@@ -31,9 +33,9 @@ fun UserDTO.toDomain(): User {
         dateOfBirth = dateOfBirth,
         phoneNumber = phoneNumber,
         description = description,
-        gender = gender,
         avgRating = avgRating,
         avgDrivingSkills = avgDrivingSkills,
-        countReviews = countReviews
+        countReviews = countReviews,
+        createdAt = createdAt
     )
 }

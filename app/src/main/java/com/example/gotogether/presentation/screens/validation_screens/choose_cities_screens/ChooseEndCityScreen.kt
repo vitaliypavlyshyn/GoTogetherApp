@@ -1,4 +1,4 @@
-package com.example.gotogether.presentation.screens.validation_screens
+package com.example.gotogether.presentation.screens.validation_screens.choose_cities_screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -17,6 +19,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,8 +43,8 @@ import com.example.gotogether.ui.theme.PurpleGrey80
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChooseStartCityScreen(
-    locationState: ChooseLocationViewModel.LocationsState,
+fun ChooseEndCityScreen(
+    locationState: LocationViewModel.LocationsState,
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
@@ -65,8 +69,8 @@ fun ChooseStartCityScreen(
                     .distinct()
                     .sorted()
 
-                var selectedRegion by remember { mutableStateOf<String?>(null) }
-                var selectedCity by remember { mutableStateOf<String?>(null) }
+                var selectedRegion by remember { mutableStateOf<String?>(ChosenRoute.toCityAdminName) }
+                var selectedCity by remember { mutableStateOf<String?>(ChosenRoute.toCityName) }
 
                 var expandedRegion by remember { mutableStateOf(false) }
                 var expandedCity by remember { mutableStateOf(false) }
@@ -75,16 +79,16 @@ fun ChooseStartCityScreen(
                     citiesMap[selectedRegion] ?: emptyList()
                 } else {
                     allCities
-                }.filter { it != ChosenRoute.toCityName}
+                }.filter { it != ChosenRoute.fromCityName}
 
                 LaunchedEffect(selectedCity) {
                     selectedCity?.let { city ->
                         val location = locations.firstOrNull { it.cityNameUk == city }
                         if (location != null) {
                             selectedRegion = location.adminNameUk
-                            ChosenRoute.fromCityId = location.cityId
-                            ChosenRoute.fromCityName = location.cityNameUk
-                            ChosenRoute.fromCityAdminName = location.adminNameUk
+                            ChosenRoute.toCityId = location.cityId
+                            ChosenRoute.toCityName = location.cityNameUk
+                            ChosenRoute.toCityAdminName = location.adminNameUk
                         }
                     }
                 }
@@ -96,8 +100,19 @@ fun ChooseStartCityScreen(
                         .padding(24.dp),
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
+                    IconButton(
+                        onClick = {
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "back",
+                            tint = Purple
+                        )
+                    }
                     Text(
-                        "Виїжджати з",
+                        "Їхати до",
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp,
                         color = DarkGray
@@ -202,4 +217,5 @@ fun ChooseStartCityScreen(
             }
         }
     }
+
 }

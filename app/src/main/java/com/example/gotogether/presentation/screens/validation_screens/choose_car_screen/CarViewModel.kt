@@ -1,15 +1,17 @@
-package com.example.gotogether.presentation.screens.profile_screen
+package com.example.gotogether.presentation.screens.validation_screens.choose_car_screen
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gotogether.data.user.UpdateUserRequestDTO
+import com.example.gotogether.domain.car.Car
+import com.example.gotogether.domain.car.GetCarsUseCase
 import com.example.gotogether.domain.user.User
 import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
 import com.example.gotogether.domain.user.usecase.UpdateUserUseCase
+import com.example.gotogether.presentation.screens.profile_screen.ProfileViewModel.UserState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,14 +20,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(
+class CarViewModel @Inject constructor(
+    private val getCarsUseCase: GetCarsUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val updateUserUseCase: UpdateUserUseCase
 ): ViewModel() {
-    private val _state = MutableStateFlow(UserState())
+    private val _state = MutableStateFlow(MyCarState())
     val state = _state.asStateFlow()
+
     var updateResult by mutableStateOf<Result<String>?>(null)
         private set
+
     init {
         viewModelScope.launch {
             _state.update {
@@ -36,40 +41,25 @@ class ProfileViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     user = getCurrentUser(),
+                    cars = getCars(),
                     isLoading = false
                 )
             }
         }
     }
 
-    fun loadUser() {
+    suspend fun getCars(): Result<List<Car>> = getCarsUseCase()
+    suspend fun getCurrentUser(): Result<User>? = getCurrentUserUseCase()
+    fun updateCar(userUuid: String, carId: Long?) {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            val result = getCurrentUser()
-            _state.update {
-                it.copy(user = result, isLoading = false)
-            }
+            updateResult = updateUserUseCase(userUuid, UpdateUserRequestDTO(carId = carId))
         }
     }
 
-    fun updateProfilePhoto(userUuid: String, photo: ByteArray?, onSuccess: () -> Unit = {}) {
-        viewModelScope.launch {
-            try {
-                updateUserUseCase(userUuid, UpdateUserRequestDTO(pictureProfile = photo))
-                onSuccess()
-            } catch (e: Exception) {
 
-            }
-        }
-    }
-
-    suspend fun getCurrentUser(): Result<User>? {
-        return getCurrentUserUseCase.invoke()
-
-    }
-
-    data class UserState(
+    data class MyCarState(
         val user: Result<User>? = null,
+        val cars: Result<List<Car>>? = null,
         val isLoading: Boolean = false
     )
 }

@@ -1,4 +1,4 @@
-package com.example.gotogether.presentation.screens.validation_screens
+package com.example.gotogether.presentation.screens.validation_screens.choose_cities_screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ChooseLocationViewModel @Inject constructor(
+class LocationViewModel @Inject constructor(
     private val getLocationsUseCase: GetLocationsUseCase
 ): ViewModel() {
     private val _state = MutableStateFlow(LocationsState())

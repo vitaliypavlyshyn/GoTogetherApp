@@ -19,19 +19,22 @@ import com.example.gotogether.presentation.screens.login_screen.LoginViewModel
 import com.example.gotogether.presentation.screens.my_trips_screen.MyTripsScreen
 import com.example.gotogether.presentation.screens.profile_screen.ProfileScreen
 import com.example.gotogether.presentation.screens.profile_screen.ProfileViewModel
-import com.example.gotogether.presentation.screens.profile_screen.user
 import com.example.gotogether.presentation.screens.proposition_screens.PropositionScreen
 import com.example.gotogether.presentation.screens.registration_screen.RegistrationScreen
 import com.example.gotogether.presentation.screens.reviews_screen.ReviewsScreen
 import com.example.gotogether.presentation.screens.reviews_screen.ReviewsViewModel
-import com.example.gotogether.presentation.screens.validation_screens.ChooseEndCityScreen
-import com.example.gotogether.presentation.screens.validation_screens.ChooseStartCityScreen
+import com.example.gotogether.presentation.screens.validation_screens.choose_cities_screens.ChooseEndCityScreen
+import com.example.gotogether.presentation.screens.validation_screens.choose_cities_screens.ChooseStartCityScreen
 import com.example.gotogether.presentation.screens.search_trips_screen.SearchTripsScreen
 import com.example.gotogether.presentation.screens.trips_list_screen.TripsListScreen
 import com.example.gotogether.presentation.screens.trips_list_screen.TripsListViewModel
 import com.example.gotogether.presentation.screens.user_profile_screen.UserProfileScreen
 import com.example.gotogether.presentation.screens.user_profile_screen.UserProfileViewModel
-import com.example.gotogether.presentation.screens.validation_screens.ChooseLocationViewModel
+import com.example.gotogether.presentation.screens.validation_screens.change_info_screen.ChangeInfoScreen
+import com.example.gotogether.presentation.screens.validation_screens.change_info_screen.ChangeInfoViewModel
+import com.example.gotogether.presentation.screens.validation_screens.choose_car_screen.CarViewModel
+import com.example.gotogether.presentation.screens.validation_screens.choose_car_screen.ChooseCarScreen
+import com.example.gotogether.presentation.screens.validation_screens.choose_cities_screens.LocationViewModel
 
 @Composable
 fun NavigationController(
@@ -40,14 +43,13 @@ fun NavigationController(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.TripsList.route,
+        startDestination = NavRoutes.Profile.route,
         modifier = modifier
     ) {
         composable(NavRoutes.Profile.route) {
             val profileViewModel = hiltViewModel<ProfileViewModel>()
-            val profileState = profileViewModel.state.collectAsState()
             ProfileScreen(
-                profileState = profileState.value,
+                profileViewModel = profileViewModel,
                 navController = navController
             )
         }
@@ -77,7 +79,7 @@ fun NavigationController(
             )
         }
         composable(NavRoutes.ChooseStartCity.route) {
-            val chooseLocationViewModel = hiltViewModel<ChooseLocationViewModel>()
+            val chooseLocationViewModel = hiltViewModel<LocationViewModel>()
             val locationState = chooseLocationViewModel.state.collectAsState()
             ChooseStartCityScreen(
                 locationState = locationState.value,
@@ -85,10 +87,17 @@ fun NavigationController(
             )
         }
         composable(NavRoutes.ChooseEndCity.route) {
-            val chooseLocationViewModel = hiltViewModel<ChooseLocationViewModel>()
+            val chooseLocationViewModel = hiltViewModel<LocationViewModel>()
             val locationState = chooseLocationViewModel.state.collectAsState()
             ChooseEndCityScreen(
                 locationState = locationState.value,
+                navController = navController
+            )
+        }
+        composable(NavRoutes.ChooseCar.route) {
+            val carViewModel = hiltViewModel<CarViewModel>()
+            ChooseCarScreen(
+                carViewModel = carViewModel,
                 navController = navController
             )
         }
@@ -135,6 +144,13 @@ fun NavigationController(
             val reviewsState = reviewsViewModel.state.collectAsState()
             ReviewsScreen(
                 reviewsState = reviewsState.value,
+                navController = navController,
+            )
+        }
+        composable(NavRoutes.ChangeInfo.route) {
+            val changeInfoViewModel = hiltViewModel<ChangeInfoViewModel>()
+            ChangeInfoScreen(
+                changeInfoViewModel = changeInfoViewModel,
                 navController = navController,
             )
         }

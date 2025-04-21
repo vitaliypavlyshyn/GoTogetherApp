@@ -1,6 +1,10 @@
 package com.example.gotogether.presentation.screens.profile_screen
 
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -31,17 +35,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.gotogether.R
+import com.example.gotogether.presentation.components.verified_fields.UnverifiedField
+import com.example.gotogether.presentation.components.verified_fields.VerifiedField
 import com.example.gotogether.ui.theme.DarkGray
 import com.example.gotogether.ui.theme.DarkGreen
 import com.example.gotogether.ui.theme.MediumGray
@@ -52,19 +68,43 @@ import com.example.gotogether.utils.extentions.roundTo2DecimalPlaces
 
 @Composable
 fun ProfileScreen(
-    profileState: ProfileViewModel.UserState,
+    profileViewModel: ProfileViewModel,
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
+    val profileState = profileViewModel.state.collectAsState()
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        profileViewModel.loadUser()
+    }
+    var selectedImageByteArray by remember { mutableStateOf<ByteArray?>(null) }
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            val inputStream = context.contentResolver.openInputStream(it)
+            val byteArray = inputStream?.readBytes()
+            selectedImageByteArray = byteArray
+
+            byteArray?.let { photoBytes ->
+                profileState.value.user?.getOrNull()?.let { user ->
+                    profileViewModel.updateProfilePhoto(user.userUuid, photoBytes) {
+                        profileViewModel.loadUser()
+                    }
+                }
+            }
+        }
+    }
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        if (profileState.isLoading) {
+        if (profileState.value.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.run { align(Alignment.Center) }
             )
         } else {
-            profileState.user?.onSuccess { user ->
+            profileState.value.user?.onSuccess { user ->
                 Column(
                     modifier = Modifier
                         .background(Color.White)
@@ -77,7 +117,7 @@ fun ProfileScreen(
                             .padding(start = 16.dp, end = 16.dp, top = 50.dp)
                             .clickable(
                                 onClick = {
-
+                                    navController.navigate("user_profile/${user.userUuid}")
                                 }
                             ),
                         verticalAlignment = Alignment.CenterVertically
@@ -94,8 +134,13 @@ fun ProfileScreen(
                                     .padding(4.dp)
                                     .clip(CircleShape)
                             ) {
+                                val bitmap = user.pictureProfile?.let {
+                                    BitmapFactory.decodeByteArray(it, 0, it.size)
+                                }?.asImageBitmap()
+
                                 Image(
-                                    painter = painterResource(R.drawable.test_avatar),
+                                    bitmap = bitmap
+                                        ?: ImageBitmap.imageResource(id = R.drawable.test_avatar),
                                     contentDescription = "avatar",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier.fillMaxSize()
@@ -117,7 +162,8 @@ fun ProfileScreen(
                                             tint = Purple
                                         )
                                         Text(
-                                            text = user.avgRating.roundTo2DecimalPlaces().toString(),
+                                            text = user.avgRating.roundTo2DecimalPlaces()
+                                                .toString(),
                                             fontSize = 16.sp,
                                             fontWeight = FontWeight.Medium,
                                             color = DarkGray,
@@ -156,7 +202,7 @@ fun ProfileScreen(
                                 .fillMaxWidth()
                                 .clickable(
                                     onClick = {
-
+                                        imagePickerLauncher.launch("image/*")
                                     }
                                 )
                         )
@@ -170,7 +216,7 @@ fun ProfileScreen(
                                 .fillMaxWidth()
                                 .clickable(
                                     onClick = {
-
+                                        navController.navigate("change_info")
                                     }
                                 )
                         )
@@ -197,7 +243,7 @@ fun ProfileScreen(
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         VerifiedField(
-                            text = user.phoneNumber,
+                            text = "+38${user.phoneNumber}",
                             modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                         )
                     } else {
@@ -210,7 +256,7 @@ fun ProfileScreen(
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         VerifiedField(
-                            text = "monkeysigma208@gmail.com",
+                            text = user.email ?: "",
                             modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                         )
                         Spacer(modifier = Modifier.height(10.dp))
@@ -238,6 +284,7 @@ fun ProfileScreen(
                         Text(
                             text = user.description,
                             color = MediumGray,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 15.sp,
                             modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                         )
@@ -246,6 +293,7 @@ fun ProfileScreen(
                             text = "Інформація відсутня",
                             color = Color.Gray,
                             fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                         )
                     }
@@ -264,18 +312,18 @@ fun ProfileScreen(
                         modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-                    if (user.carId == null) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(start = 16.dp, end = 16.dp)
-                                .fillMaxWidth()
-                                .clickable(
-                                    onClick = {
-
-                                    }
-                                )
-                        ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(start = 16.dp, end = 16.dp)
+                            .fillMaxWidth()
+                            .clickable(
+                                onClick = {
+                                    navController.navigate("choose_car")
+                                }
+                            )
+                    ) {
+                        if (user.carId == null) {
                             Icon(
                                 imageVector = Icons.Default.AddCircleOutline,
                                 contentDescription = "add_car",
@@ -285,30 +333,20 @@ fun ProfileScreen(
                             Text(
                                 text = "Додати авто",
                                 color = DarkGreen,
+                                fontWeight = FontWeight.Medium,
                                 fontSize = 15.sp
                             )
-                        }
-                    } else {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(start = 16.dp, end = 16.dp)
-                                .fillMaxWidth()
-                                .clickable(
-                                    onClick = {
-
-                                    }
-                                )
-                        ) {
+                        } else {
                             Icon(
                                 imageVector = Icons.Default.DirectionsCar,
                                 contentDescription = "car_icon",
-                                tint = MediumGray
+                                tint = Purple
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Toyota Supra",
-                                color = MediumGray,
+                                text = "${user.make?.uppercase()} ${user.model}",
+                                color = Purple,
+                                fontWeight = FontWeight.Medium,
                                 fontSize = 15.sp
                             )
                         }

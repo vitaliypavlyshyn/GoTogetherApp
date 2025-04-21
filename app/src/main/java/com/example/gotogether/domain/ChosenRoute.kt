@@ -6,11 +6,11 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 object ChosenRoute {
-    var fromCityId: Long? = 64//null
+    var fromCityId: Long? = null
     var fromCityName: String? = null
     var fromCityAdminName: String? = null
 
-    var toCityId: Long? = 6//null
+    var toCityId: Long? = null
     var toCityName: String? = null
     var toCityAdminName: String? = null
 

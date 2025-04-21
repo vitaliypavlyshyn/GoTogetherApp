@@ -36,9 +36,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gotogether.R
-import com.example.gotogether.presentation.components.auth.AuthFieldError
 import com.example.gotogether.presentation.components.auth.AuthParameter
 import com.example.gotogether.presentation.components.auth.AuthTextField
+import com.example.gotogether.presentation.components.auth.FieldError
 import com.example.gotogether.ui.theme.DarkGreen
 import com.example.gotogether.ui.theme.Purple
 import com.example.gotogether.utils.validation.AuthValidator
@@ -106,7 +106,7 @@ fun LoginScreen(
                     }
                 }
             )
-            AuthFieldError(
+            FieldError(
                 inputError = emailError,
                 modifier = Modifier.padding(start = 5.dp)
             )
@@ -136,7 +136,7 @@ fun LoginScreen(
                     }
                 }
             )
-            AuthFieldError(
+            FieldError(
                 inputError = passwordError,
                 modifier = Modifier.padding(start = 5.dp)
             )
