@@ -64,10 +64,10 @@ fun GoogleMapsScreen(
     }
     Column {
         IconButton(
+            modifier = Modifier.padding(16.dp),
             onClick = {
                 navController.popBackStack()
-            },
-            modifier = Modifier.padding(8.dp)
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,

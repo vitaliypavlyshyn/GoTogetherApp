@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gotogether.data.user.UpdateUserRequestDTO
 import com.example.gotogether.domain.ChosenRoute
@@ -50,7 +51,7 @@ import com.example.gotogether.ui.theme.PurpleGrey80
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChooseCarScreen(
-    carViewModel: CarViewModel,
+    carViewModel: CarViewModel = hiltViewModel<CarViewModel>(),
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
@@ -106,6 +107,7 @@ fun ChooseCarScreen(
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     IconButton(
+                        modifier = Modifier.padding(16.dp),
                         onClick = {
                             navController.popBackStack()
                         }

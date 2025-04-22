@@ -10,7 +10,7 @@ class AuthInterceptor @Inject constructor(
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token = "dbb62adc-d975-4724-bf1a-c7c2de9dc908"//sharedPreferences.getString("auth_token", " ")
+        val token = sharedPreferences.getString("auth_token", " ")//"dbb62adc-d975-4724-bf1a-c7c2de9dc908"
         if (token.isNullOrEmpty()) {
             throw Exception("No token available")
         }

@@ -17,7 +17,8 @@ data class UserDTO(
     val avgRating: Double?,
     val avgDrivingSkills: Double?,
     val countReviews: Int,
-    val createdAt: String?
+    val createdAt: String?,
+    val isDeleted: Boolean
 )
 
 fun UserDTO.toDomain(): User {
@@ -36,6 +37,7 @@ fun UserDTO.toDomain(): User {
         avgRating = avgRating,
         avgDrivingSkills = avgDrivingSkills,
         countReviews = countReviews,
-        createdAt = createdAt
+        createdAt = createdAt,
+        isDeleted = isDeleted
     )
 }

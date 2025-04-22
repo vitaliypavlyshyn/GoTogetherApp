@@ -41,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gotogether.data.user.UpdateUserRequestDTO
 
@@ -57,7 +58,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun ChangeInfoScreen(
-    changeInfoViewModel: ChangeInfoViewModel,
+    changeInfoViewModel: ChangeInfoViewModel = hiltViewModel<ChangeInfoViewModel>(),
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
@@ -104,6 +105,7 @@ fun ChangeInfoScreen(
                             .padding(bottom = 80.dp)
                     ) {
                         IconButton(
+                            modifier = Modifier.padding(16.dp),
                             onClick = {
                                 navController.popBackStack()
                             }

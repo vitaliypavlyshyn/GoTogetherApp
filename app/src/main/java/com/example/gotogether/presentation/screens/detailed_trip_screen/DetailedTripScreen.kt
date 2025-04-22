@@ -103,10 +103,11 @@ fun DetailedTripScreen(
 
                     ) {
                         IconButton(
+                            modifier = Modifier.padding(16.dp),
                             onClick = {
                                 navController.popBackStack()
                             }
-                        ) {
+                        ){
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = "back",

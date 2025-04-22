@@ -17,17 +17,6 @@ data class User(
     val avgRating: Double?,
     val avgDrivingSkills: Double?,
     val countReviews: Int,
-    val createdAt: String?
+    val createdAt: String?,
+    val isDeleted: Boolean
 )
-
-fun User.toUpdateUserRequestDTO(): UpdateUserRequestDTO {
-    return UpdateUserRequestDTO(
-        carId = this.carId,
-        pictureProfile = this.pictureProfile,
-        firstName = this.firstName,
-        lastName = this.lastName,
-        dateOfBirth = this.dateOfBirth,
-        phoneNumber = this.phoneNumber,
-        description = this.description
-    )
-}

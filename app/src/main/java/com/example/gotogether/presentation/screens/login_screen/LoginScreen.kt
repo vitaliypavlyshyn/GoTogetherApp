@@ -1,5 +1,7 @@
 package com.example.gotogether.presentation.screens.login_screen
 
+import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,12 +38,22 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gotogether.R
+import com.example.gotogether.data.activity_log.ActivityLogRequestDTO
 import com.example.gotogether.presentation.components.auth.AuthParameter
 import com.example.gotogether.presentation.components.auth.AuthTextField
 import com.example.gotogether.presentation.components.auth.FieldError
 import com.example.gotogether.ui.theme.DarkGreen
 import com.example.gotogether.ui.theme.Purple
 import com.example.gotogether.utils.validation.AuthValidator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.net.HttpURLConnection
+import java.net.URL
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 @Composable
 fun LoginScreen(
@@ -175,6 +187,14 @@ fun LoginScreen(
                 Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
 
                 if (result.success) {
+                    Log.d("myLog", "${result.token}")
+
+                    if(result.token != null) {
+                        val activityInfo = collectActivityInfo().copy(userUuid = result.token)
+                        loginViewModel.saveActivity(activityInfo)
+                    }
+
+
                     navController.navigate("search_trips") {
                         popUpTo("login") { inclusive = true }
                     }
@@ -184,4 +204,39 @@ fun LoginScreen(
             }
         }
     }
+}
+
+suspend fun collectActivityInfo(): ActivityLogRequestDTO {
+    val publicIp = withContext(Dispatchers.IO) {
+        try {
+            val url = URL("https://api64.ipify.org?format=text")
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.connectTimeout = 5000
+            connection.readTimeout = 5000
+            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+                connection.inputStream.bufferedReader().use { it.readText() }
+            } else {
+                "Unknown IP"
+            }
+        } catch (e: Exception) {
+            "Unknown IP"
+        }
+    }
+
+    val fullInfo = "Device: ${Build.MANUFACTURER} ${Build.MODEL}, Android: ${Build.VERSION.RELEASE}"
+    val parts = fullInfo.split(", ")
+
+    val device = parts.getOrNull(0)?.removePrefix("Device: ") ?: "Unknown Device"
+    val os = parts.getOrNull(1) ?: "Unknown OS"
+
+    val entryDate = Instant.now().toString()
+
+    return ActivityLogRequestDTO(
+        userUuid = "",
+        device = device,
+        os = os,
+        publicIp = publicIp,
+        entryDate = entryDate
+    )
 }

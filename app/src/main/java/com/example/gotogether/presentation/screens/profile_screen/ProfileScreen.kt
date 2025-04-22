@@ -54,6 +54,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gotogether.R
 import com.example.gotogether.presentation.components.verified_fields.UnverifiedField
@@ -68,7 +69,7 @@ import com.example.gotogether.utils.extentions.roundTo2DecimalPlaces
 
 @Composable
 fun ProfileScreen(
-    profileViewModel: ProfileViewModel,
+    profileViewModel: ProfileViewModel = hiltViewModel<ProfileViewModel>(),
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
@@ -369,7 +370,13 @@ fun ProfileScreen(
                             ),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row() {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().clickable(
+                                onClick = {
+                                    navController.navigate("settings/${user.userUuid}")
+                                }
+                            )
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
                                 contentDescription = "settings",
@@ -378,17 +385,18 @@ fun ProfileScreen(
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 text = "Налаштування",
-                                fontSize = 18.sp,
+                                fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = MediumGray
                             )
+                            Spacer(modifier = Modifier.weight(1f))
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = "right",
+                                tint = MediumGray
+                            )
                         }
-                        Spacer(modifier = Modifier.weight(1f))
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = "right",
-                            tint = MediumGray
-                        )
+
                     }
                 }
             }?.onFailure {

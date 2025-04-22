@@ -1,9 +1,5 @@
 package com.example.gotogether.presentation.screens.profile_screen
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gotogether.data.user.UpdateUserRequestDTO
@@ -24,8 +20,7 @@ class ProfileViewModel @Inject constructor(
 ): ViewModel() {
     private val _state = MutableStateFlow(UserState())
     val state = _state.asStateFlow()
-    var updateResult by mutableStateOf<Result<String>?>(null)
-        private set
+
     init {
         viewModelScope.launch {
             _state.update {

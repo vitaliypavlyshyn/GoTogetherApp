@@ -3,6 +3,9 @@ package com.example.gotogether.di
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.gotogether.AuthInterceptor
+import com.example.gotogether.data.activity_log.ActivityLogApiService
+import com.example.gotogether.data.activity_log.repository.ActivityLogRepository
+import com.example.gotogether.data.activity_log.repository.ActivityLogRepositoryImpl
 import com.example.gotogether.data.car.CarApiService
 import com.example.gotogether.data.car.repository.CarRepository
 import com.example.gotogether.data.car.repository.CarRepositoryImpl
@@ -12,6 +15,9 @@ import com.example.gotogether.data.location.repository.LocationRepositoryImpl
 import com.example.gotogether.data.login.LoginApiService
 import com.example.gotogether.data.login.repository.LoginRepository
 import com.example.gotogether.data.login.repository.LoginRepositoryImpl
+import com.example.gotogether.data.registration.RegistrationApiService
+import com.example.gotogether.data.registration.repository.RegistrationRepository
+import com.example.gotogether.data.registration.repository.RegistrationRepositoryImpl
 import com.example.gotogether.data.review.ReviewApiService
 import com.example.gotogether.data.review.repository.ReviewRepository
 import com.example.gotogether.data.review.repository.ReviewRepositoryImpl
@@ -24,14 +30,18 @@ import com.example.gotogether.data.trip_passenger.repository.TripPassengerReposi
 import com.example.gotogether.data.user.UserApiService
 import com.example.gotogether.data.user.repository.UserRepository
 import com.example.gotogether.data.user.repository.UserRepositoryImpl
+import com.example.gotogether.domain.activity_log.GetActivitiesUseCase
+import com.example.gotogether.domain.activity_log.PostActivityUseCase
 import com.example.gotogether.domain.car.GetCarsUseCase
 import com.example.gotogether.domain.location.GetLocationsUseCase
 import com.example.gotogether.domain.login.LoginUseCase
+import com.example.gotogether.domain.registration.RegistrationUseCase
 import com.example.gotogether.domain.review.GetRatingUseCase
 import com.example.gotogether.domain.review.GetReviewsUseCase
 import com.example.gotogether.domain.trip.GetDetailedTripByIdUseCase
 import com.example.gotogether.domain.trip.GetTripsByDateUseCase
 import com.example.gotogether.domain.trip_passenger.GetPassengersByTripIdUseCase
+import com.example.gotogether.domain.user.usecase.DeleteUserUseCase
 import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
 import com.example.gotogether.domain.user.usecase.GetUserByUuidUseCase
 import com.example.gotogether.domain.user.usecase.UpdateUserUseCase
@@ -66,7 +76,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://bafe-46-173-105-195.ngrok-free.app")
+            .baseUrl("https://bc19-46-173-105-195.ngrok-free.app")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -80,8 +90,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(api: UserApiService): UserRepository {
-        return UserRepositoryImpl(api)
+    fun provideUserRepository(api: UserApiService, retrofit: Retrofit): UserRepository {
+        return UserRepositoryImpl(api, retrofit)
     }
 
     @Provides
@@ -100,6 +110,12 @@ object AppModule {
     @Singleton
     fun provideGetCurrentUserUseCase(repository: UserRepository): GetCurrentUserUseCase {
         return GetCurrentUserUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteUserUseCase(repository: UserRepository): DeleteUserUseCase {
+        return DeleteUserUseCase(repository)
     }
 
     @Provides
@@ -220,5 +236,53 @@ object AppModule {
     @Singleton
     fun provideGetCarsUseCase(repository: CarRepository): GetCarsUseCase {
         return GetCarsUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRegistrationApiService(retrofit: Retrofit): RegistrationApiService {
+        return retrofit.create(RegistrationApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRegistrationRepository(
+        api: RegistrationApiService,
+        retrofit: Retrofit
+    ): RegistrationRepository {
+        return RegistrationRepositoryImpl(api, retrofit)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRegistrationUseCase(repository: RegistrationRepository): RegistrationUseCase {
+        return RegistrationUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideActivityLogApiService(retrofit: Retrofit): ActivityLogApiService {
+        return retrofit.create(ActivityLogApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideActivityLogRepository(
+        api: ActivityLogApiService,
+        retrofit: Retrofit
+    ): ActivityLogRepository {
+        return ActivityLogRepositoryImpl(api, retrofit)
+    }
+
+    @Provides
+    @Singleton
+    fun providePostActivityUseCase(repository: ActivityLogRepository): PostActivityUseCase {
+        return PostActivityUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetActivitiesUseCase(repository: ActivityLogRepository): GetActivitiesUseCase {
+        return GetActivitiesUseCase(repository)
     }
 }

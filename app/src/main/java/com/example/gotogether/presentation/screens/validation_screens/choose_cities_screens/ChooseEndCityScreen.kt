@@ -96,7 +96,7 @@ fun ChooseEndCityScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color(0xFFF8F8F8))
+                        .background(Color.White)
                         .padding(24.dp),
                     verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
