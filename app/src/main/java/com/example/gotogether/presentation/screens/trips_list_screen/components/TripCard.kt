@@ -69,7 +69,12 @@ fun TripCard(
             .height(160.dp)
             .clickable(
                 onClick = {
-                    navController.navigate("detailed_trip/${trip.tripId}")
+                        navController.navigate("detailed_trip/${trip.tripId}")
+                },
+                enabled = if (ChosenRoute.seatsCount > trip.availableSeats) {
+                    false
+                } else {
+                    true
                 }
             ),
         shape = RoundedCornerShape(15.dp),

@@ -1,4 +1,4 @@
-package com.example.gotogether.data.trip
+package com.example.gotogether.data.trip.dto
 
 import com.example.gotogether.domain.trip.DetailedTrip
 import com.example.gotogether.utils.mapper.TimeMapper

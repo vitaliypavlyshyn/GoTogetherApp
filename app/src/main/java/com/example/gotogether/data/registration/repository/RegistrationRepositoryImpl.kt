@@ -1,7 +1,7 @@
 package com.example.gotogether.data.registration.repository
 
 import com.example.gotogether.data.registration.RegistrationApiService
-import com.example.gotogether.data.registration.RegistrationRequestDTO
+import com.example.gotogether.data.registration.RegistrationDTO
 import com.example.gotogether.data.registration.RegistrationResponseDTO
 import com.example.gotogether.data.registration.toDomain
 import com.example.gotogether.domain.registration.Registration
@@ -22,7 +22,7 @@ class RegistrationRepositoryImpl @Inject constructor(
         dateOfBirth: String,
     ): Registration {
         val response = api.register(
-            RegistrationRequestDTO(
+            RegistrationDTO(
                 firstName = firstName,
                 lastName = lastName,
                 dateOfBirth = dateOfBirth,

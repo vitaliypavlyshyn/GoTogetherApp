@@ -52,14 +52,12 @@ fun TripsListScreen(
             )
         } else {
             tripsListState.trips?.onSuccess { trips ->
-                val filteredTrips = trips.filter {
-                    it.status == TripStatus.SCHEDULED.status
-                }.sortedBy {
-                    LocalDateTime.parse(it.startTime, formatter)
-                }
                 Column(modifier = Modifier.background(Color.White)) {
                     Row(
-                        modifier = Modifier.padding(top = 16.dp).fillMaxWidth().background(Color.White)
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .fillMaxWidth()
+                            .background(Color.White)
                             .drawBehind {
                                 val strokeWidth = 2.dp.toPx()
                                 val y = size.height - strokeWidth / 2
@@ -80,7 +78,7 @@ fun TripsListScreen(
                                 fontSize = 16.sp
                             )
                             Text(
-                                text = filteredTrips.size.toString(),
+                                text = trips.size.toString(),
                                 color = MediumGray,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp
@@ -88,22 +86,38 @@ fun TripsListScreen(
                             Spacer(modifier = Modifier.height(10.dp))
                         }
                     }
-                LazyColumn(
-                    modifier = Modifier
-                        .background(Color.White)
-                        .fillMaxSize()
-                        .padding(16.dp)
-                ) {
-                    items(
-                        filteredTrips.size
-                    ) { index ->
-                        TripCard(
-                            navController = navController,
-                            trip = filteredTrips[index]
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
+                    if (trips.isNotEmpty()) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .background(Color.White)
+                                .fillMaxSize()
+                                .padding(16.dp)
+                        ) {
+                            items(
+                                trips.size
+                            ) { index ->
+
+                                TripCard(
+                                    navController = navController,
+                                    trip = trips[index]
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                        }
+                    } else {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "Поїздок наразі немає.",
+                                color = MediumGray,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp
+                            )
+                        }
                     }
-                }
                 }
             }?.onFailure {
                 Column(

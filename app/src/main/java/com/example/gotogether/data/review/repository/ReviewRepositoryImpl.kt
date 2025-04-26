@@ -3,7 +3,6 @@ package com.example.gotogether.data.review.repository
 import com.example.gotogether.data.review.ReviewApiService
 import com.example.gotogether.data.review.toDomain
 import com.example.gotogether.data.review.toDomainList
-import com.example.gotogether.data.trip.toDomainList
 import com.example.gotogether.domain.review.Rating
 import com.example.gotogether.domain.review.Review
 import javax.inject.Inject

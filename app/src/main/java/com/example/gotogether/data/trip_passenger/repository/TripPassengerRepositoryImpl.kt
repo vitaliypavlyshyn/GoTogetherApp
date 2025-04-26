@@ -1,6 +1,5 @@
 package com.example.gotogether.data.trip_passenger.repository
 
-import com.example.gotogether.data.trip.toDomain
 import com.example.gotogether.data.trip_passenger.TripPassengerApiService
 import com.example.gotogether.data.trip_passenger.toDomainList
 import com.example.gotogether.domain.trip_passenger.TripPassenger

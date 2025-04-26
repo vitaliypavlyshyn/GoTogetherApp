@@ -29,3 +29,31 @@ suspend fun fetchRoute(startLat: String, startLng: String, endLat: String, endLn
         emptyList()
     }
 }
+
+suspend fun getDirectionResponse(startLat: String, startLng: String, endLat: String, endLng: String): Pair<Int, Int>? {
+    val url = "https://maps.googleapis.com/maps/api/directions/json?origin=$startLat,$startLng&destination=$endLat,$endLng&mode=driving&key=${API_KEY}"
+
+    return withContext(Dispatchers.IO) {
+        try {
+            val result = URL(url).readText()
+            val jsonObject = JSONObject(result)
+            val routes = jsonObject.getJSONArray("routes")
+
+            if (routes.length() > 0) {
+                val firstRoute = routes.getJSONObject(0)
+                val legs = firstRoute.getJSONArray("legs")
+                if (legs.length() > 0) {
+                    val firstLeg = legs.getJSONObject(0)
+
+                    val distance = firstLeg.getJSONObject("distance").getInt("value") // метри
+                    val duration = firstLeg.getJSONObject("duration").getInt("value") // секунди
+
+                    return@withContext Pair(distance, duration)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        null
+    }
+}

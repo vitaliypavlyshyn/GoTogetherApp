@@ -5,7 +5,6 @@ import com.example.gotogether.data.activity_log.ActivityLogRequestDTO
 import com.example.gotogether.data.activity_log.SaveActivityLogResponseDTO
 import com.example.gotogether.data.activity_log.toDomain
 import com.example.gotogether.data.activity_log.toDomainList
-import com.example.gotogether.data.trip.toDomainList
 import com.example.gotogether.domain.activity_log.ActivityLog
 import com.example.gotogether.domain.activity_log.SaveActivityLog
 import okhttp3.ResponseBody

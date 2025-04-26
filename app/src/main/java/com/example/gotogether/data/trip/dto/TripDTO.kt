@@ -1,10 +1,7 @@
-package com.example.gotogether.data.trip
+package com.example.gotogether.data.trip.dto
 
 import com.example.gotogether.domain.trip.Trip
 import com.example.gotogether.utils.mapper.TimeMapper
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
 data class TripDTO(
     val tripId: Long?,

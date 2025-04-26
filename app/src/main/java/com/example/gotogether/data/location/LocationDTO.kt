@@ -20,8 +20,8 @@ fun LocationDTO.toDomain(): Location {
         cityId = cityId,
         regionId = regionId,
         cityNameUk = cityNameUk,
-        lat = cityNameUk,
-        lng = lat,
+        lat = lat,
+        lng = lng,
         adminNameUk = adminNameUk
     )
 }

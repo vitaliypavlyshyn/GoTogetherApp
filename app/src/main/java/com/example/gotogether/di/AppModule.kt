@@ -38,8 +38,9 @@ import com.example.gotogether.domain.login.LoginUseCase
 import com.example.gotogether.domain.registration.RegistrationUseCase
 import com.example.gotogether.domain.review.GetRatingUseCase
 import com.example.gotogether.domain.review.GetReviewsUseCase
-import com.example.gotogether.domain.trip.GetDetailedTripByIdUseCase
-import com.example.gotogether.domain.trip.GetTripsByDateUseCase
+import com.example.gotogether.domain.trip.usecase.GetDetailedTripByIdUseCase
+import com.example.gotogether.domain.trip.usecase.GetTripsByDateUseCase
+import com.example.gotogether.domain.trip.usecase.PostTripUseCase
 import com.example.gotogether.domain.trip_passenger.GetPassengersByTripIdUseCase
 import com.example.gotogether.domain.user.usecase.DeleteUserUseCase
 import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
@@ -76,7 +77,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://bc19-46-173-105-195.ngrok-free.app")
+            .baseUrl("https://2f61-46-173-105-195.ngrok-free.app")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -162,8 +163,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTripRepository(api: TripApiService): TripRepository {
-        return TripRepositoryImpl(api)
+    fun provideTripRepository(api: TripApiService, retrofit: Retrofit): TripRepository {
+        return TripRepositoryImpl(api, retrofit)
     }
 
     @Provides
@@ -176,6 +177,12 @@ object AppModule {
     @Singleton
     fun provideGetDetailedTripByIdUseCase(repository: TripRepository): GetDetailedTripByIdUseCase {
         return GetDetailedTripByIdUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun providePostTripUseCase(repository: TripRepository): PostTripUseCase {
+        return PostTripUseCase(repository)
     }
 
     @Provides

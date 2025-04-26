@@ -64,7 +64,9 @@ fun NavigationController(
             )
         }
         composable(NavRoutes.Proposition.route) {
-            PropositionScreen()
+            PropositionScreen(
+                navController = navController
+            )
         }
         composable(NavRoutes.SearchTrips.route) {
             SearchTripsScreen(

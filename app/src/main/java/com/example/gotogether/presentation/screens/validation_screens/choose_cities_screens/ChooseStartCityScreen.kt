@@ -89,6 +89,8 @@ fun ChooseStartCityScreen(
                             ChosenRoute.fromCityId = location.cityId
                             ChosenRoute.fromCityName = location.cityNameUk
                             ChosenRoute.fromCityAdminName = location.adminNameUk
+                            ChosenRoute.startLat = location.lat
+                            ChosenRoute.startLng = location.lng
                         }
                     }
                 }

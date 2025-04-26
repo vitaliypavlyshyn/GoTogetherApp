@@ -1,7 +1,7 @@
-package com.example.gotogether.domain.trip
+package com.example.gotogether.domain.trip.usecase
 
 import com.example.gotogether.data.trip.repository.TripRepository
-import com.example.gotogether.domain.location.Location
+import com.example.gotogether.domain.trip.Trip
 import javax.inject.Inject
 
 class GetTripsByDateUseCase @Inject constructor(
