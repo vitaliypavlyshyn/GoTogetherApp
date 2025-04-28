@@ -61,13 +61,16 @@ fun SettingsScreen(
     val coroutineScope = rememberCoroutineScope()
     var showConfirmDialog by remember { mutableStateOf(false) }
     LaunchedEffect(settingsState.value.deleteResult) {
-        settingsState.value.deleteResult?.let { result ->
-            Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
-            if (result.success) {
+
+        settingsState.value.deleteResult?.onSuccess { res ->
+            if (res.isSuccess) {
                 navController.navigate("login") {
                     popUpTo("settings") { inclusive = true }
                 }
             }
+            Toast.makeText(context, res.message, Toast.LENGTH_SHORT).show()
+        }?.onFailure { res ->
+            Toast.makeText(context, res.message, Toast.LENGTH_SHORT).show()
         }
     }
 

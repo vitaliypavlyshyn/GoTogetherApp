@@ -5,8 +5,8 @@ import retrofit2.http.Path
 
 interface ReviewApiService {
     @GET("/reviews/{userUuid}")
-    suspend fun getReviewsByUserUuid(@Path("userUuid") userUuid: String): List<ReviewDTO>
+    suspend fun getReviewsByUserUuid(@Path("userUuid") userUuid: String): List<ReviewResponse>
 
     @GET("/ratings/{userUuid}")
-    suspend fun getRatingByUserUuid(@Path("userUuid") userUuid: String): RatingDTO
+    suspend fun getRatingByUserUuid(@Path("userUuid") userUuid: String): RatingResponse
 }

@@ -1,14 +1,14 @@
 package com.example.gotogether.presentation.screens.proposition_screens
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gotogether.data.google_maps_route.getDirectionResponse
-import com.example.gotogether.data.trip.dto.CreateTripRequestDTO
-import com.example.gotogether.data.user.UpdateUserRequestDTO
+import com.example.gotogether.data.trip.dto.CreateTripRequest
+import com.example.gotogether.data.trip.dto.CreateTripResponse
+import com.example.gotogether.data.trip_request.dto.ResponseDTO
 import com.example.gotogether.domain.ChosenRoute
 import com.example.gotogether.domain.trip.CreateTrip
 import com.example.gotogether.domain.trip.usecase.PostTripUseCase
@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toJavaInstant
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -32,7 +31,7 @@ class PropositionViewModel @Inject constructor(
     private val _state = MutableStateFlow(PropositionState())
     val state = _state.asStateFlow()
 
-    var insertResult by mutableStateOf<Result<CreateTrip>?>(null)
+    var insertResult by mutableStateOf<Result<ResponseDTO>?>(null)
         private set
 
     init {
@@ -78,7 +77,7 @@ class PropositionViewModel @Inject constructor(
             val tripStartTime = ChosenRoute.createInstantFromChosenRoute()?.toInstant()
             if (directionResponseDTO != null && ChosenRoute.fromCityId != null
                 && ChosenRoute.toCityId != null && ChosenRoute.price != null) {
-                val requestDTO = CreateTripRequestDTO(
+                val requestDTO = CreateTripRequest(
                     driverUuid = driverUUid,
                     startLocationId = ChosenRoute.fromCityId ?: -1,
                     endLocationId = ChosenRoute.toCityId ?: -1,

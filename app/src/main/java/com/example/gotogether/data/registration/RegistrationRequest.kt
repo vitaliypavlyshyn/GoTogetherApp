@@ -2,7 +2,7 @@ package com.example.gotogether.data.registration
 
 import com.example.gotogether.domain.registration.Registration
 
-data class RegistrationDTO(
+data class RegistrationRequest(
     val firstName: String,
     val lastName: String,
     val dateOfBirth: String,
@@ -10,14 +10,14 @@ data class RegistrationDTO(
     val password: String
 )
 
-data class RegistrationResponseDTO(
-    val success: Boolean,
+data class RegistrationResponse(
+    val isSuccess: Boolean,
     val message: String
 )
 
-fun RegistrationResponseDTO.toDomain(): Registration {
+fun RegistrationResponse.toDomain(): Registration {
     return Registration(
-        success = success,
+        isSuccess = isSuccess,
         message = message
     )
 }

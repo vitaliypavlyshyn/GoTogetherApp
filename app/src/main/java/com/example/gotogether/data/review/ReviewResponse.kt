@@ -1,9 +1,8 @@
 package com.example.gotogether.data.review
 
-import com.example.gotogether.domain.review.Rating
 import com.example.gotogether.domain.review.Review
 
-data class ReviewDTO(
+data class ReviewResponse(
     val reviewId: Long,
     val tripId: Long,
     val reviewerUuid: String,
@@ -16,7 +15,7 @@ data class ReviewDTO(
     val createdAt: String
 )
 
-fun ReviewDTO.toDomain(): Review {
+fun ReviewResponse.toDomain(): Review {
     return Review(
         reviewId = reviewId,
         tripId = tripId,
@@ -31,7 +30,7 @@ fun ReviewDTO.toDomain(): Review {
     )
 }
 
-fun List<ReviewDTO>.toDomainList(): List<Review> {
+fun List<ReviewResponse>.toDomainList(): List<Review> {
     val reviews = mutableListOf<Review>()
     for(review in this) {
         reviews.add(review.toDomain())

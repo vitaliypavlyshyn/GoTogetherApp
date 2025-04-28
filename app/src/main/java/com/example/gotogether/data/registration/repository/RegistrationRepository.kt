@@ -1,5 +1,7 @@
 package com.example.gotogether.data.registration.repository
 
+import com.example.gotogether.data.registration.RegistrationResponse
+import com.example.gotogether.data.trip_request.dto.ResponseDTO
 import com.example.gotogether.domain.login.Login
 import com.example.gotogether.domain.registration.Registration
 
@@ -9,5 +11,5 @@ interface RegistrationRepository {
                          firstName: String,
                          lastName: String,
                          dateOfBirth: String
-    ): Registration
+    ): Result<ResponseDTO>
 }

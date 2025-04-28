@@ -1,6 +1,8 @@
 package com.example.gotogether.presentation.screens.detailed_trip_screen
 
+import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,47 +42,93 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gotogether.R
+import com.example.gotogether.data.trip_request.dto.ResponseDTO
 import com.example.gotogether.domain.RouteCoordinates
+import com.example.gotogether.domain.TripStatus
+import com.example.gotogether.domain.trip_request.TripRequestStatus
 import com.example.gotogether.presentation.screens.detailed_trip_screen.components.PassengersColumn
 import com.example.gotogether.ui.theme.DarkGray
 import com.example.gotogether.ui.theme.DarkGreen
 import com.example.gotogether.ui.theme.MediumGray
 import com.example.gotogether.ui.theme.Purple
 import com.example.gotogether.ui.theme.PurpleGrey80
-import com.example.gotogether.utils.formatter.TimeFormatter
-import androidx.core.net.toUri
 import com.example.gotogether.utils.extentions.roundTo2DecimalPlaces
 import com.example.gotogether.utils.formatter.DistanceFormatter
+import com.example.gotogether.utils.formatter.TimeFormatter
+import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import kotlin.onSuccess
 
 @Composable
 fun DetailedTripScreen(
-    detailedTripState: DetailedTripVewModel.DetailedTripState,
+    detailedTripViewModel: DetailedTripViewModel = hiltViewModel<DetailedTripViewModel>(),
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val detailedTripState = detailedTripViewModel.state.collectAsState()
+
+    val insertPassengerResult = detailedTripViewModel.insertPassengerResult
+    val insertRequestResult = detailedTripViewModel.insertRequestResult
+    val deletePassengerResult = detailedTripViewModel.deletePassengerResult
+    val deleteRequestResult = detailedTripViewModel.deleteRequestResult
+
+    LaunchedEffect(insertPassengerResult) {
+        insertPassengerResult?.let {
+            handleResult(it, context, navController)
+        }
+    }
+
+    LaunchedEffect(insertRequestResult) {
+        insertRequestResult?.let {
+            handleResult(it, context, navController)
+        }
+    }
+
+    LaunchedEffect(deletePassengerResult) {
+        deletePassengerResult?.let {
+            handleResult(it, context, navController)
+        }
+    }
+
+    LaunchedEffect(deleteRequestResult) {
+        deleteRequestResult?.let {
+            handleResult(it, context, navController)
+        }
+    }
+
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        if (detailedTripState.isLoading) {
+        if (detailedTripState.value.isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.run { align(Alignment.Center) }
             )
         } else {
-            detailedTripState.detailedTrip?.onSuccess { trip ->
+            detailedTripState.value.detailedTrip?.onSuccess { trip ->
+                val myRequestStatus =  detailedTripState.value.myRequest?.getOrNull()?.status
                 val context = LocalContext.current
                 val interactionSource = remember { MutableInteractionSource() }
                 val isPressed = interactionSource.collectIsPressedAsState()
@@ -88,8 +136,11 @@ fun DetailedTripScreen(
                     if (isPressed.value) Color(0x1A004D40) else Color.Transparent
                 val contentColor = if (isPressed.value) DarkGreen.copy(alpha = 0.6f) else DarkGreen
                 val formattedDate = remember(trip.startTime) {
-                    mutableStateOf(TimeFormatter.formatFullUkrainianDate(trip.startTime))
+                    mutableStateOf(TimeFormatter.formatDateWithTodayCheck(trip.startTime))
                 }
+                val tripStartDateTime = LocalDateTime.parse(trip.startTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                val now = LocalDateTime.now()
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -107,7 +158,7 @@ fun DetailedTripScreen(
                             onClick = {
                                 navController.popBackStack()
                             }
-                        ){
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.ArrowBack,
                                 contentDescription = "back",
@@ -136,7 +187,10 @@ fun DetailedTripScreen(
                                             endLng = trip.endLng,
                                             endCity = trip.endCity
                                         )
-                                        navController.currentBackStackEntry?.savedStateHandle?.set("coordinates", route)
+                                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                                            "coordinates",
+                                            route
+                                        )
                                         navController.navigate("google_maps")
                                     }
                                 )
@@ -197,7 +251,9 @@ fun DetailedTripScreen(
                             thickness = 8.dp
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Row(modifier = Modifier.padding(start = 18.dp, end = 18.dp).height(32.dp)) {
+                        Row(modifier = Modifier
+                            .padding(start = 18.dp, end = 18.dp)
+                            .height(32.dp)) {
                             Text(
                                 text = "1 пасажир",
                                 color = MediumGray,
@@ -286,7 +342,12 @@ fun DetailedTripScreen(
                         )
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
+                            modifier = Modifier.padding(
+                                top = 8.dp,
+                                bottom = 8.dp,
+                                start = 16.dp,
+                                end = 16.dp
+                            )
                         ) {
                             if (!trip.isFastConfirm) {
                                 Icon(
@@ -320,7 +381,12 @@ fun DetailedTripScreen(
                         }
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
+                            modifier = Modifier.padding(
+                                top = 8.dp,
+                                bottom = 8.dp,
+                                start = 16.dp,
+                                end = 16.dp
+                            )
                         ) {
 
                             Icon(
@@ -338,7 +404,7 @@ fun DetailedTripScreen(
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        if(trip.driverPhoneNumber != null) {
+                        if (trip.driverPhoneNumber != null) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center,
@@ -378,13 +444,32 @@ fun DetailedTripScreen(
                             thickness = 8.dp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
-                        detailedTripState.passengers?.onSuccess { passengers ->
-                           if(passengers.isNotEmpty()) {
-                               PassengersColumn(
-                                   passengers = passengers,
-                                   navController = navController
-                               )
-                           }
+                        detailedTripState.value.passengers?.onSuccess { passengers ->
+                            if (passengers.isNotEmpty()) {
+                                Text(
+                                    text = "Пасажири",
+                                    fontSize = 22.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MediumGray,
+                                    modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                                )
+                                PassengersColumn(
+                                    passengers = passengers,
+                                    navController = navController
+                                )
+                            } else {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        text = "Пасажирів немає",
+                                        fontWeight = FontWeight.Medium,
+                                        color = MediumGray,
+                                        modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                                    )
+                                }
+                            }
                         }?.onFailure {
                             Text(
                                 "Не вдалось завантажити дані про пасажирів"
@@ -422,43 +507,53 @@ fun DetailedTripScreen(
                         }
                         Spacer(modifier = Modifier.height(90.dp))
                     }
-
-                    Button(
-                        onClick = { /* дія */ },
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(16.dp)
-                            .height(50.dp)
-                            .fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Purple
-                        )
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
+                    if (now.isBefore(tripStartDateTime) &&
+                        trip.status != TripStatus.CANCELED.status &&
+                        myRequestStatus != TripRequestStatus.DECLINED.status
                         ) {
-                            if (!trip.isFastConfirm) {
-                                Icon(
-                                    imageVector = Icons.Default.AccessTime,
-                                    contentDescription = "confirm_type",
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "Надіслати запит",
-                                    fontWeight = FontWeight.Medium,
-                                )
-                            } else {
-                                Icon(
-                                    Icons.Default.AutoMode,
-                                    contentDescription = "confirm_type",
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "Забронювати",
-                                    fontWeight = FontWeight.Medium,
-                                )
-                            }
+                        if (detailedTripState.value.isPassengerIsMe == true) {
+                            DetailedTripActionButton(
+                                buttonText = "Скасувати бронювання",
+                                icon = Icons.Default.AutoMode,
+                                buttonColor = DarkGreen,
+                                onClick = { detailedTripViewModel.deletePassenger() },
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(16.dp)
+                            )
+                        } else if (myRequestStatus == TripRequestStatus.PENDING.status) {
+                            DetailedTripActionButton(
+                                buttonText = "Скасувати запит",
+                                icon = Icons.Default.AccessTime,
+                                buttonColor = DarkGreen,
+                                onClick = { detailedTripViewModel.deleteRequest() },
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(16.dp)
+                            )
+                        } else if (detailedTripState.value.isPassengerIsMe == false &&
+                            !trip.isFastConfirm &&
+                            myRequestStatus != TripRequestStatus.DECLINED.status
+                        ) {
+                            DetailedTripActionButton(
+                                buttonText = "Надіслати запит",
+                                icon = Icons.Default.AccessTime,
+                                buttonColor = Purple,
+                                onClick = { detailedTripViewModel.createTripRequest() },
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(16.dp)
+                            )
+                        } else if (detailedTripState.value.isPassengerIsMe == false && trip.isFastConfirm) {
+                            DetailedTripActionButton(
+                                buttonText = "Забронювати",
+                                icon = Icons.Default.AutoMode,
+                                buttonColor = Purple,
+                                onClick = { detailedTripViewModel.bookTrip() },
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(16.dp)
+                            )
                         }
                     }
                 }
@@ -471,5 +566,56 @@ fun DetailedTripScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun DetailedTripActionButton(
+    buttonText: String,
+    icon: ImageVector,
+    buttonColor: Color,
+    onClick: suspend () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val scope = rememberCoroutineScope()
+
+    Button(
+        onClick = {
+            scope.launch { onClick() }
+        },
+        modifier = modifier
+            .height(50.dp)
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = buttonColor)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = "icon",
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = buttonText,
+                fontWeight = FontWeight.Medium
+            )
+        }
+    }
+}
+
+suspend fun handleResult(
+    result: Result<ResponseDTO>,
+    context: Context,
+    navController: NavController? = null,
+    successMessage: String = "Операція успішна",
+    destination: String = "my_trips"
+) {
+    result.onSuccess {
+        Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+        if(navController != null) navController.navigate(destination)
+    }.onFailure { error ->
+        Toast.makeText(context, error.message ?: "Сталася помилка", Toast.LENGTH_SHORT).show()
     }
 }

@@ -1,10 +1,8 @@
 package com.example.gotogether.data.trip.dto
 
-import com.example.gotogether.data.registration.RegistrationResponseDTO
-import com.example.gotogether.domain.registration.Registration
 import com.example.gotogether.domain.trip.CreateTrip
 
-data class CreateTripRequestDTO (
+data class CreateTripRequest (
     val driverUuid: String,
     val startLocationId: Long,
     val endLocationId: Long,
@@ -16,12 +14,12 @@ data class CreateTripRequestDTO (
     val isFastConfirm: Boolean
 )
 
-data class CreateTripResponseDTO (
+data class CreateTripResponse (
     val message: String,
     val isSuccess: Boolean
 )
 
-fun CreateTripResponseDTO.toDomain(): CreateTrip {
+fun CreateTripResponse.toDomain(): CreateTrip {
     return CreateTrip(
         isSuccess = isSuccess,
         message = message

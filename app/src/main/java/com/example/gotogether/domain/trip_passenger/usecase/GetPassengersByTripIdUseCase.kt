@@ -1,6 +1,7 @@
-package com.example.gotogether.domain.trip_passenger
+package com.example.gotogether.domain.trip_passenger.usecase
 
 import com.example.gotogether.data.trip_passenger.repository.TripPassengerRepository
+import com.example.gotogether.domain.trip_passenger.TripPassenger
 import javax.inject.Inject
 
 class GetPassengersByTripIdUseCase @Inject constructor(

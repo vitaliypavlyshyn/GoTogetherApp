@@ -1,7 +1,6 @@
 package com.example.gotogether.data.user
 
-import com.example.gotogether.data.login.LoginRequestDTO
-import com.example.gotogether.data.login.LoginResponseDTO
+import com.example.gotogether.data.trip_request.dto.ResponseDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -11,17 +10,17 @@ import retrofit2.http.Path
 
 interface UserApiService {
     @GET("/users/{userUuid}")
-    suspend fun getUserByUuid(@Path("userUuid") userUuid: String): UserDTO
+    suspend fun getUserByUuid(@Path("userUuid") userUuid: String): UserResponse
 
     @GET("/me")
-    suspend fun getCurrentUser(): UserDTO
+    suspend fun getCurrentUser(): UserResponse
 
     @PUT("users/{userUuid}")
     suspend fun updateUser(
         @Path("userUuid") userUuid: String,
-        @Body request: UpdateUserRequestDTO
-    ): Response<String>
+        @Body request: UpdateUserRequest
+    ): ResponseDTO
 
-    @POST("/users/delete")
-    suspend fun deleteUser(@Body request: DeleteUserRequestDTO): Response<DeleteUserResponseDTO>
+    @POST("user/{userUuid}")
+    suspend fun deleteUser(@Path("userUuid") userUuid: String): ResponseDTO
 }

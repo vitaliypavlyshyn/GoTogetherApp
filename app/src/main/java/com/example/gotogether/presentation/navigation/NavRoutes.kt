@@ -6,6 +6,7 @@ sealed class NavRoutes(val route: String) {
     object Profile : NavRoutes("profile")
     object MyTrips : NavRoutes("my_trips")
     object Proposition : NavRoutes("proposition")
+    object MyPropositions : NavRoutes("my_propositions")
     object SearchTrips : NavRoutes("search_trips")
     object ChooseStartCity : NavRoutes("choose_start_city")
     object ChooseEndCity : NavRoutes("choose_end_city")
@@ -17,4 +18,5 @@ sealed class NavRoutes(val route: String) {
     object Reviews : NavRoutes("reviews")
     object ChangeInfo : NavRoutes("change_info")
     object Settings : NavRoutes("settings")
+    object DetailedProposition : NavRoutes("detailed_proposition")
 }

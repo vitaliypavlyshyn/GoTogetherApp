@@ -11,10 +11,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.gotogether.domain.RouteCoordinates
+import com.example.gotogether.presentation.screens.detailed_proposition_screen.DetailedPropositionScreen
 import com.example.gotogether.presentation.screens.detailed_trip_screen.DetailedTripScreen
-import com.example.gotogether.presentation.screens.detailed_trip_screen.DetailedTripVewModel
+import com.example.gotogether.presentation.screens.detailed_trip_screen.DetailedTripViewModel
 import com.example.gotogether.presentation.screens.google_maps_screen.GoogleMapsScreen
 import com.example.gotogether.presentation.screens.login_screen.LoginScreen
+import com.example.gotogether.presentation.screens.my_propositions_screen.MyPropositionsScreen
 import com.example.gotogether.presentation.screens.my_trips_screen.MyTripsScreen
 import com.example.gotogether.presentation.screens.profile_screen.ProfileScreen
 import com.example.gotogether.presentation.screens.proposition_screens.PropositionScreen
@@ -60,11 +62,16 @@ fun NavigationController(
         }
         composable(NavRoutes.MyTrips.route) { stackEntry ->
             MyTripsScreen(
-                modifier = Modifier.padding(top = 100.dp)
+                navController = navController
             )
         }
         composable(NavRoutes.Proposition.route) {
             PropositionScreen(
+                navController = navController
+            )
+        }
+        composable(NavRoutes.MyPropositions.route) {
+            MyPropositionsScreen(
                 navController = navController
             )
         }
@@ -108,10 +115,7 @@ fun NavigationController(
             )
         }
         composable(NavRoutes.DetailedTrip.route + "/{tripId}") {
-            val detailedTripViewModel = hiltViewModel<DetailedTripVewModel>()
-            val detailedTripState = detailedTripViewModel.state.collectAsState()
             DetailedTripScreen(
-                detailedTripState = detailedTripState.value,
                 navController = navController
             )
         }
@@ -152,6 +156,11 @@ fun NavigationController(
         }
         composable(NavRoutes.Settings.route + "/{userUuid}") {
             SettingsScreen(
+                navController = navController,
+            )
+        }
+        composable(NavRoutes.DetailedProposition.route + "/{tripId}") {
+            DetailedPropositionScreen(
                 navController = navController,
             )
         }

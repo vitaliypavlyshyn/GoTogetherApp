@@ -53,6 +53,34 @@ object TimeFormatter {
             .replaceFirstChar { it.uppercaseChar() }
     }
 
+    fun formatDateWithTodayCheck(dateString: String): String {
+        val inputFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+        val dateTime = LocalDateTime.parse(dateString, inputFormatter).toLocalDate()
+        val today = LocalDate.now()
+
+        return if (dateTime == today) {
+            "Сьогодні"
+        } else {
+            val outputFormatter = DateTimeFormatter.ofPattern("d MMMM, EEEE", Locale("uk", "UA"))
+            val formatted = dateTime.format(outputFormatter)
+
+            formatted.split(" ").joinToString(" ") { word ->
+                word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale("uk", "UA")) else it.toString() }
+            }
+        }
+    }
+
+    fun formatFullUkrainianDateFromLocalDate(date: LocalDate): String {
+        val outputFormatter = DateTimeFormatter.ofPattern("d MMMM, EEEE", Locale("uk", "UA"))
+        val formatted = date.format(outputFormatter)
+
+        return formatted.split(" ").joinToString(" ") { word ->
+            word.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(Locale("uk", "UA")) else it.toString()
+            }
+        }
+    }
+
     fun getUserAgeFromString(dateOfBirth: String): Int {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)
         val birthDate = LocalDate.parse(dateOfBirth, formatter)

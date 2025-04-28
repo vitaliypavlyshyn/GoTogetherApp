@@ -39,13 +39,6 @@ fun PassengersColumn(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(
-            text = "Пасажири",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Medium,
-            color = MediumGray,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
-        )
         repeat(passengers.size) { index ->
             Row() {
                 Spacer(modifier = Modifier.height(8.dp))

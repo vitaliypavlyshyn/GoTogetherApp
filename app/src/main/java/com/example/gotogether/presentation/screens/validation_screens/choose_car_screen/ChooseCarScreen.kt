@@ -1,6 +1,5 @@
 package com.example.gotogether.presentation.screens.validation_screens.choose_car_screen
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,9 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.gotogether.data.user.UpdateUserRequestDTO
 import com.example.gotogether.domain.ChosenRoute
-import com.example.gotogether.presentation.screens.validation_screens.choose_cities_screens.LocationViewModel
 import com.example.gotogether.ui.theme.DarkGray
 import com.example.gotogether.ui.theme.Purple
 import com.example.gotogether.ui.theme.PurpleGrey80

@@ -2,7 +2,8 @@ package com.example.gotogether.presentation.screens.login_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gotogether.data.activity_log.ActivityLogRequestDTO
+import com.example.gotogether.data.activity_log.ActivityLogRequest
+import com.example.gotogether.data.trip_request.dto.ResponseDTO
 import com.example.gotogether.domain.activity_log.PostActivityUseCase
 import com.example.gotogether.domain.activity_log.SaveActivityLog
 import com.example.gotogether.domain.login.Login
@@ -11,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,7 +33,7 @@ class LoginViewModel @Inject constructor(
         _state.value = null
     }
 
-    suspend fun saveActivity(request: ActivityLogRequestDTO): SaveActivityLog  {
+    suspend fun saveActivity(request: ActivityLogRequest): Result<ResponseDTO>  {
         return postActivityUseCase(request)
     }
 }

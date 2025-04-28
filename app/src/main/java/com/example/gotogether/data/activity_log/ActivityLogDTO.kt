@@ -2,7 +2,15 @@ package com.example.gotogether.data.activity_log
 
 import com.example.gotogether.domain.activity_log.ActivityLog
 
-data class ActivityLogResponseDTO(
+data class  ActivityLogRequest(
+    val userUuid: String,
+    val device: String,
+    val os: String,
+    val publicIp: String,
+    val entryDate: String
+)
+
+data class ActivityLogResponse(
     val userUuid: String,
     val device: String,
     val os: String,
@@ -10,7 +18,7 @@ data class ActivityLogResponseDTO(
     val entryDate: String,
 )
 
-fun ActivityLogResponseDTO.toDomain(): ActivityLog {
+fun ActivityLogResponse.toDomain(): ActivityLog {
     return ActivityLog(
         userUuid = userUuid,
         device = device,
@@ -20,7 +28,7 @@ fun ActivityLogResponseDTO.toDomain(): ActivityLog {
     )
 }
 
-fun List<ActivityLogResponseDTO>.toDomainList(): List<ActivityLog> {
+fun List<ActivityLogResponse>.toDomainList(): List<ActivityLog> {
     val activitiesLog = mutableListOf<ActivityLog>()
     for(response in this) {
         activitiesLog.add(response.toDomain())

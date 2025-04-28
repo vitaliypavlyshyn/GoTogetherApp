@@ -1,6 +1,6 @@
 package com.example.gotogether.data.user
 
-data class UpdateUserRequestDTO (
+data class UpdateUserRequest (
     val carId: Long? = null,
     val pictureProfile: ByteArray? = null,
     val firstName: String? = null,

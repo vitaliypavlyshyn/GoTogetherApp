@@ -1,18 +1,14 @@
 package com.example.gotogether.data.trip.repository
 
-import com.example.gotogether.data.location.toDomainList
-import com.example.gotogether.data.registration.RegistrationResponseDTO
-import com.example.gotogether.data.registration.toDomain
 import com.example.gotogether.data.trip.TripApiService
-import com.example.gotogether.data.trip.dto.CreateTripRequestDTO
-import com.example.gotogether.data.trip.dto.CreateTripResponseDTO
+import com.example.gotogether.data.trip.dto.CreateTripRequest
+import com.example.gotogether.data.trip.dto.CreateTripResponse
+import com.example.gotogether.data.trip.dto.UpdateTripRequest
 import com.example.gotogether.data.trip.dto.toDomain
 import com.example.gotogether.data.trip.dto.toDomainList
-import com.example.gotogether.domain.trip.CreateTrip
+import com.example.gotogether.data.trip_request.dto.ResponseDTO
 import com.example.gotogether.domain.trip.DetailedTrip
 import com.example.gotogether.domain.trip.Trip
-import okhttp3.ResponseBody
-import retrofit2.Converter
 import retrofit2.Retrofit
 import javax.inject.Inject
 
@@ -22,8 +18,35 @@ class TripRepositoryImpl @Inject constructor(
 ) : TripRepository{
     override suspend fun getAllTripsByDate(fromCityId: Long, toCityId: Long, date: String): Result<List<Trip>> {
         return try {
-            val locations = api.getTripsByDate(fromCityId, toCityId, date)
-            Result.success(locations.toDomainList())
+            val trips = api.getTripsByDate(fromCityId, toCityId, date)
+            Result.success(trips.toDomainList())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getTripsByDriverUuid(driverUuid: String): Result<List<Trip>> {
+        return try {
+            val trips = api.getTripsByDriverUuid(driverUuid)
+            Result.success(trips.toDomainList())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getTripsByPassengerUuid(passengerUuid: String): Result<List<Trip>> {
+        return try {
+            val trips = api.getTripsByPassengerUuid(passengerUuid)
+            Result.success(trips.toDomainList())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getTripsByRequesterUuid(requester: String): Result<List<Trip>> {
+        return try {
+            val trips = api.getTripsByRequesterUuid(requester)
+            Result.success(trips.toDomainList())
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -38,10 +61,31 @@ class TripRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun createTrip(request: CreateTripRequestDTO): Result<CreateTrip> {
+    override suspend fun createTrip(request: CreateTripRequest): Result<ResponseDTO> {
         return try {
             val response = api.createTrip(request)
-            Result.success(response.toDomain())
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteTrip(tripId: Long): Result<ResponseDTO> {
+        return try {
+            val response = api.deleteTrip(tripId)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun updateTrip(
+        tripId: Long,
+        request: UpdateTripRequest,
+    ): Result<ResponseDTO> {
+        return try {
+            val response = api.updateTrip(tripId, request)
+            Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
         }

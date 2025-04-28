@@ -7,6 +7,7 @@ data class TripPassenger(
     val firstName: String,
     val lastName: String,
     val pictureProfile: ByteArray?,
+    val phoneNumber: String?,
     val seatsBooked: Int,
     val avgRating: Double?,
     val countReviews: Int

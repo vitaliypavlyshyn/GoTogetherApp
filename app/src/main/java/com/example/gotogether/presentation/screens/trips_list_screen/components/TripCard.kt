@@ -77,7 +77,7 @@ fun TripCard(
                     true
                 }
             ),
-        shape = RoundedCornerShape(15.dp),
+        shape = RoundedCornerShape(14.dp),
         border = BorderStroke(1.dp, PurpleGrey80),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         colors = CardDefaults.cardColors(containerColor = if(areEnoughSeats.value) {
@@ -95,14 +95,14 @@ fun TripCard(
                     Text(
                         text = TimeFormatter.toHHmm(trip.startTime),
                         color = DarkGray,
-                        fontSize = 16.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = TimeFormatter.toHHmm(trip.endTime),
                         color = DarkGray,
-                        fontSize = 16.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -111,14 +111,14 @@ fun TripCard(
                     Text(
                         text = trip.startLocationCity,
                         color = DarkGray,
-                        fontSize = 16.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = trip.endLocationCity,
                         color = DarkGray,
-                        fontSize = 16.sp,
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -126,9 +126,9 @@ fun TripCard(
                 Text(
                     text = if (ChosenRoute.seatsCount > trip.availableSeats) "Місць немає"
                     else "${trip.price} ₴",
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(15.dp),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
+                    fontSize = 17.sp
                 )
             }
         }

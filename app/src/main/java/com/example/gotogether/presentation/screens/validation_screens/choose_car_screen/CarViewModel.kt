@@ -5,13 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gotogether.data.user.UpdateUserRequestDTO
+import com.example.gotogether.data.trip_request.dto.ResponseDTO
+import com.example.gotogether.data.user.UpdateUserRequest
 import com.example.gotogether.domain.car.Car
 import com.example.gotogether.domain.car.GetCarsUseCase
 import com.example.gotogether.domain.user.User
 import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
 import com.example.gotogether.domain.user.usecase.UpdateUserUseCase
-import com.example.gotogether.presentation.screens.profile_screen.ProfileViewModel.UserState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +28,7 @@ class CarViewModel @Inject constructor(
     private val _state = MutableStateFlow(MyCarState())
     val state = _state.asStateFlow()
 
-    var updateResult by mutableStateOf<Result<String>?>(null)
+    var updateResult by mutableStateOf<Result<ResponseDTO>?>(null)
         private set
 
     init {
@@ -52,7 +52,7 @@ class CarViewModel @Inject constructor(
     suspend fun getCurrentUser(): Result<User>? = getCurrentUserUseCase()
     fun updateCar(userUuid: String, carId: Long?) {
         viewModelScope.launch {
-            updateResult = updateUserUseCase(userUuid, UpdateUserRequestDTO(carId = carId))
+            updateResult = updateUserUseCase(userUuid, UpdateUserRequest(carId = carId))
         }
     }
 

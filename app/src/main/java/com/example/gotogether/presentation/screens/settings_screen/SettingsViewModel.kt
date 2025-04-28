@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gotogether.data.trip_request.dto.ResponseDTO
 import com.example.gotogether.domain.activity_log.ActivityLog
 import com.example.gotogether.domain.activity_log.GetActivitiesUseCase
 import com.example.gotogether.domain.user.DeleteUser
@@ -87,7 +88,7 @@ class SettingsViewModel @Inject constructor(
 
     data class SettingsState(
         val activityLogs: Result<List<ActivityLog>>? = null,
-        val deleteResult: DeleteUser? = null,
+        val deleteResult: Result<ResponseDTO>? = null,
         val isLoading: Boolean = false,
         val errorMessage: String? = null
     )

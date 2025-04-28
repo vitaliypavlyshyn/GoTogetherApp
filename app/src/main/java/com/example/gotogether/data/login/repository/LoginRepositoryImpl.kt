@@ -2,8 +2,8 @@ package com.example.gotogether.data.login.repository
 
 import android.content.SharedPreferences
 import com.example.gotogether.data.login.LoginApiService
-import com.example.gotogether.data.login.LoginRequestDTO
-import com.example.gotogether.data.login.LoginResponseDTO
+import com.example.gotogether.data.login.LoginRequest
+import com.example.gotogether.data.login.LoginResponse
 import com.example.gotogether.data.login.toDomain
 import com.example.gotogether.domain.login.Login
 import okhttp3.ResponseBody
@@ -17,12 +17,12 @@ class LoginRepositoryImpl  @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : LoginRepository {
     override suspend fun login(email: String, password: String): Login {
-        val response = api.login(LoginRequestDTO(email, password))
+        val response = api.login(LoginRequest(email, password))
 
-        val errorConverter: Converter<ResponseBody, LoginResponseDTO> =
-            retrofit.responseBodyConverter(LoginResponseDTO::class.java, arrayOf())
+        val errorConverter: Converter<ResponseBody, LoginResponse> =
+            retrofit.responseBodyConverter(LoginResponse::class.java, arrayOf())
 
-        val dto: LoginResponseDTO = when {
+        val dto: LoginResponse = when {
             response.isSuccessful -> {
                 response.body()!!
             }
@@ -31,13 +31,13 @@ class LoginRepositoryImpl  @Inject constructor(
                     try {
                         errorConverter.convert(errBody)
                     } catch (_: Exception) {
-                        LoginResponseDTO(
+                        LoginResponse(
                             success = false,
                             message = "Server error ${response.code()}",
                             token = null
                         )
                     }
-                } ?: LoginResponseDTO(
+                } ?: LoginResponse(
                     success = false,
                     message = "Unknown error ${response.code()}",
                     token = null

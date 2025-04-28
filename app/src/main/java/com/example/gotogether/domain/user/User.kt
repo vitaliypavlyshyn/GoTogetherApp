@@ -1,7 +1,5 @@
 package com.example.gotogether.domain.user
 
-import com.example.gotogether.data.user.UpdateUserRequestDTO
-
 data class User(
     val userUuid: String,
     val carId: Long?,

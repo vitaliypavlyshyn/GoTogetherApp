@@ -101,7 +101,7 @@ fun PropositionScreen(
     LaunchedEffect(insertResult) {
         insertResult?.onSuccess { res ->
             if (res.isSuccess) {
-                navController.navigate("my_trips")
+                navController.navigate("my_propositions")
             }
             Toast.makeText(context, res.message, Toast.LENGTH_SHORT).show()
         }?.onFailure { res ->
@@ -483,11 +483,6 @@ fun PropositionScreen(
                                     Spacer(modifier = Modifier.height(16.dp))
                                     Button(
                                         onClick = {
-                                            Log.d(
-                                                "myLog",
-                                                "${ChosenRoute.startLat} ${ChosenRoute.startLng}\n" +
-                                                        "${ChosenRoute.endLat} ${ChosenRoute.endLng}"
-                                            )
                                             scope.launch {
                                                 propositionViewModel.createTrip(user.userUuid)
                                             }

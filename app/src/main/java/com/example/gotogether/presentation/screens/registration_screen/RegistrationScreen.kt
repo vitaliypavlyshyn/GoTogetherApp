@@ -54,7 +54,7 @@ import java.time.format.DateTimeFormatter
 fun RegistrationScreen(
     registrationViewModel: RegistrationViewModel = hiltViewModel<RegistrationViewModel>(),
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val email = remember { mutableStateOf("") }
@@ -250,13 +250,15 @@ fun RegistrationScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         Button(
-            onClick = { registrationViewModel.register(
-                email = email.value,
-                password = password.value,
-                firstName = firstName.value,
-                lastName = lastName.value,
-                dateOfBirth = dateOfBirth.value
-            ) },
+            onClick = {
+                registrationViewModel.register(
+                    email = email.value,
+                    password = password.value,
+                    firstName = firstName.value,
+                    lastName = lastName.value,
+                    dateOfBirth = dateOfBirth.value
+                )
+            },
             enabled = formValid,
             colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
             modifier = Modifier.height(45.dp)
@@ -283,17 +285,17 @@ fun RegistrationScreen(
         }
 
         LaunchedEffect(registrationState) {
-            registrationState?.let { result ->
-                Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
-
-                if (result.success) {
+            registrationState?.onSuccess { res ->
+                if (res.isSuccess) {
                     navController.navigate("login") {
                         popUpTo("registration") { inclusive = true }
                     }
                 }
-
-                registrationViewModel.clearRegistrationState()
+                Toast.makeText(context, res.message, Toast.LENGTH_LONG).show()
+            }?.onFailure { res ->
+                Toast.makeText(context, res.message, Toast.LENGTH_SHORT).show()
             }
+            registrationViewModel.clearRegistrationState()
         }
     }
 }

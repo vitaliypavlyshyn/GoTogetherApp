@@ -2,7 +2,7 @@ package com.example.gotogether.data.user
 
 import com.example.gotogether.domain.user.User
 
-data class UserDTO(
+data class UserResponse(
     val userUuid: String,
     val carId: Long?,
     val email: String?,
@@ -21,7 +21,7 @@ data class UserDTO(
     val isDeleted: Boolean
 )
 
-fun UserDTO.toDomain(): User {
+fun UserResponse.toDomain(): User {
     return User(
         userUuid = userUuid,
         carId = carId,

@@ -27,6 +27,9 @@ import com.example.gotogether.data.trip.repository.TripRepositoryImpl
 import com.example.gotogether.data.trip_passenger.TripPassengerApiService
 import com.example.gotogether.data.trip_passenger.repository.TripPassengerRepository
 import com.example.gotogether.data.trip_passenger.repository.TripPassengerRepositoryImpl
+import com.example.gotogether.data.trip_request.TripRequestApiService
+import com.example.gotogether.data.trip_request.repository.TripRequestRepository
+import com.example.gotogether.data.trip_request.repository.TripRequestRepositoryImpl
 import com.example.gotogether.data.user.UserApiService
 import com.example.gotogether.data.user.repository.UserRepository
 import com.example.gotogether.data.user.repository.UserRepositoryImpl
@@ -38,10 +41,23 @@ import com.example.gotogether.domain.login.LoginUseCase
 import com.example.gotogether.domain.registration.RegistrationUseCase
 import com.example.gotogether.domain.review.GetRatingUseCase
 import com.example.gotogether.domain.review.GetReviewsUseCase
+import com.example.gotogether.domain.trip.usecase.DeleteTripUseCase
 import com.example.gotogether.domain.trip.usecase.GetDetailedTripByIdUseCase
 import com.example.gotogether.domain.trip.usecase.GetTripsByDateUseCase
+import com.example.gotogether.domain.trip.usecase.GetTripsByDriverUuid
+import com.example.gotogether.domain.trip.usecase.GetTripsByPassengerUuid
+import com.example.gotogether.domain.trip.usecase.GetTripsByRequesterUuid
 import com.example.gotogether.domain.trip.usecase.PostTripUseCase
-import com.example.gotogether.domain.trip_passenger.GetPassengersByTripIdUseCase
+import com.example.gotogether.domain.trip.usecase.PutTripUseCase
+import com.example.gotogether.domain.trip_passenger.usecase.DeletePassengerUseCase
+import com.example.gotogether.domain.trip_passenger.usecase.GetPassengersByTripIdUseCase
+import com.example.gotogether.domain.trip_passenger.usecase.PostPassengerUseCase
+import com.example.gotogether.domain.trip_request.usecase.DeleteTripRequestUseCase
+import com.example.gotogether.domain.trip_request.usecase.GetTripRequestByTripIdAndUserUuidUseCase
+import com.example.gotogether.domain.trip_request.usecase.GetTripRequestsByTripIdUseCase
+import com.example.gotogether.domain.trip_request.usecase.GetTripRequestsByUserUuidUseCase
+import com.example.gotogether.domain.trip_request.usecase.PostTripRequestUseCase
+import com.example.gotogether.domain.trip_request.usecase.PutTripRequestUseCase
 import com.example.gotogether.domain.user.usecase.DeleteUserUseCase
 import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
 import com.example.gotogether.domain.user.usecase.GetUserByUuidUseCase
@@ -77,7 +93,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://2f61-46-173-105-195.ngrok-free.app")
+            .baseUrl("https://ce38-46-173-105-195.ngrok-free.app")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -91,8 +107,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(api: UserApiService, retrofit: Retrofit): UserRepository {
-        return UserRepositoryImpl(api, retrofit)
+    fun provideUserRepository(api: UserApiService): UserRepository {
+        return UserRepositoryImpl(api)
     }
 
     @Provides
@@ -127,7 +143,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideLoginRepository(api: LoginApiService, retrofit: Retrofit, sharedPreferences: SharedPreferences): LoginRepository {
+    fun provideLoginRepository(
+        api: LoginApiService,
+        retrofit: Retrofit,
+        sharedPreferences: SharedPreferences,
+    ): LoginRepository {
         return LoginRepositoryImpl(api, retrofit, sharedPreferences)
     }
 
@@ -175,6 +195,25 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideGetTripsByDriverUuid(repository: TripRepository): GetTripsByDriverUuid {
+        return GetTripsByDriverUuid(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetTripsByPassengerUuid(repository: TripRepository): GetTripsByPassengerUuid {
+        return GetTripsByPassengerUuid(repository)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideGetTripsByRequesterUuid(repository: TripRepository): GetTripsByRequesterUuid {
+        return GetTripsByRequesterUuid(repository)
+    }
+
+    @Provides
+    @Singleton
     fun provideGetDetailedTripByIdUseCase(repository: TripRepository): GetDetailedTripByIdUseCase {
         return GetDetailedTripByIdUseCase(repository)
     }
@@ -187,20 +226,96 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideDeleteTripUseCase(repository: TripRepository): DeleteTripUseCase {
+        return DeleteTripUseCase(repository)
+    }
+
+@Provides
+    @Singleton
+    fun providePutTripUseCase(repository: TripRepository): PutTripUseCase {
+        return PutTripUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
     fun provideTripPassengerApiService(retrofit: Retrofit): TripPassengerApiService {
         return retrofit.create(TripPassengerApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideTripPassengerRepository(api: TripPassengerApiService): TripPassengerRepository {
-        return TripPassengerRepositoryImpl(api)
+    fun provideTripPassengerRepository(
+        api: TripPassengerApiService,
+        retrofit: Retrofit,
+    ): TripPassengerRepository {
+        return TripPassengerRepositoryImpl(api, retrofit)
     }
 
     @Provides
     @Singleton
     fun provideGetPassengersByTripIdUseCase(repository: TripPassengerRepository): GetPassengersByTripIdUseCase {
         return GetPassengersByTripIdUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeletePassengerUseCase(repository: TripPassengerRepository): DeletePassengerUseCase {
+        return DeletePassengerUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun providePostPassengerUseCase(repository: TripPassengerRepository): PostPassengerUseCase {
+        return PostPassengerUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTripRequestApiService(retrofit: Retrofit): TripRequestApiService {
+        return retrofit.create(TripRequestApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTripRequestRepository(api: TripRequestApiService): TripRequestRepository {
+        return TripRequestRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteTripRequestUseCase(repository: TripRequestRepository): DeleteTripRequestUseCase {
+        return DeleteTripRequestUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetTripRequestsByTripIdUseCase(repository: TripRequestRepository): GetTripRequestsByTripIdUseCase {
+        return GetTripRequestsByTripIdUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetTripRequestByTripIdAndUserUuidUseCase(repository: TripRequestRepository): GetTripRequestByTripIdAndUserUuidUseCase {
+        return GetTripRequestByTripIdAndUserUuidUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun providePutTripRequestUseCase(repository: TripRequestRepository): PutTripRequestUseCase {
+        return PutTripRequestUseCase(repository)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideGetTripRequestsByUserUuidUseCase(repository: TripRequestRepository): GetTripRequestsByUserUuidUseCase {
+        return GetTripRequestsByUserUuidUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun providePostTripRequestUseCase(repository: TripRequestRepository): PostTripRequestUseCase {
+        return PostTripRequestUseCase(repository)
     }
 
     @Provides
@@ -255,9 +370,8 @@ object AppModule {
     @Singleton
     fun provideRegistrationRepository(
         api: RegistrationApiService,
-        retrofit: Retrofit
     ): RegistrationRepository {
-        return RegistrationRepositoryImpl(api, retrofit)
+        return RegistrationRepositoryImpl(api)
     }
 
     @Provides
@@ -276,9 +390,8 @@ object AppModule {
     @Singleton
     fun provideActivityLogRepository(
         api: ActivityLogApiService,
-        retrofit: Retrofit
     ): ActivityLogRepository {
-        return ActivityLogRepositoryImpl(api, retrofit)
+        return ActivityLogRepositoryImpl(api)
     }
 
     @Provides

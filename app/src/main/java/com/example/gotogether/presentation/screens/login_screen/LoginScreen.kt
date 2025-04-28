@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.gotogether.R
-import com.example.gotogether.data.activity_log.ActivityLogRequestDTO
+import com.example.gotogether.data.activity_log.ActivityLogRequest
 import com.example.gotogether.presentation.components.auth.AuthParameter
 import com.example.gotogether.presentation.components.auth.AuthTextField
 import com.example.gotogether.presentation.components.auth.FieldError
@@ -49,11 +49,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.HttpURLConnection
 import java.net.URL
-import java.text.SimpleDateFormat
 import java.time.Instant
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 @Composable
 fun LoginScreen(
@@ -206,7 +202,7 @@ fun LoginScreen(
     }
 }
 
-suspend fun collectActivityInfo(): ActivityLogRequestDTO {
+suspend fun collectActivityInfo(): ActivityLogRequest {
     val publicIp = withContext(Dispatchers.IO) {
         try {
             val url = URL("https://api64.ipify.org?format=text")
@@ -232,7 +228,7 @@ suspend fun collectActivityInfo(): ActivityLogRequestDTO {
 
     val entryDate = Instant.now().toString()
 
-    return ActivityLogRequestDTO(
+    return ActivityLogRequest(
         userUuid = "",
         device = device,
         os = os,

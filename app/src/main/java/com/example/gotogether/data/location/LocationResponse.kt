@@ -2,7 +2,7 @@ package com.example.gotogether.data.location
 
 import com.example.gotogether.domain.location.Location
 
-data class LocationDTO(
+data class LocationResponse(
     val cityId: Long,
     val regionId: Long,
     val cityName: String,
@@ -15,7 +15,7 @@ data class LocationDTO(
     val adminNameUk: String
 )
 
-fun LocationDTO.toDomain(): Location {
+fun LocationResponse.toDomain(): Location {
     return Location(
         cityId = cityId,
         regionId = regionId,
@@ -26,7 +26,7 @@ fun LocationDTO.toDomain(): Location {
     )
 }
 
-fun List<LocationDTO>.toDomainList(): List<Location> {
+fun List<LocationResponse>.toDomainList(): List<Location> {
     val locations = mutableListOf<Location>()
     for (locationDTO in this) {
         locations.add(locationDTO.toDomain())

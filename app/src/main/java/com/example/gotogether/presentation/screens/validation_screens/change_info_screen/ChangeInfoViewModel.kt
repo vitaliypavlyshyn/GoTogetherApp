@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gotogether.data.user.UpdateUserRequestDTO
-import com.example.gotogether.domain.car.Car
+import com.example.gotogether.data.trip_request.dto.ResponseDTO
+import com.example.gotogether.data.user.UpdateUserRequest
 import com.example.gotogether.domain.user.User
 import com.example.gotogether.domain.user.usecase.GetCurrentUserUseCase
 import com.example.gotogether.domain.user.usecase.UpdateUserUseCase
@@ -25,7 +25,7 @@ class ChangeInfoViewModel @Inject constructor(
     private val _state = MutableStateFlow(UserInfoState())
     val state = _state.asStateFlow()
 
-    var updateResult by mutableStateOf<Result<String>?>(null)
+    var updateResult by mutableStateOf<Result<ResponseDTO>?>(null)
         private set
 
     init {
@@ -45,7 +45,7 @@ class ChangeInfoViewModel @Inject constructor(
     }
 
     suspend fun getCurrentUser(): Result<User>? = getCurrentUserUseCase()
-    fun updateUser(userUuid: String, requestDTO: UpdateUserRequestDTO) {
+    fun updateUser(userUuid: String, requestDTO: UpdateUserRequest) {
         viewModelScope.launch {
             try {
                 updateResult = updateUserUseCase(userUuid, requestDTO)
