@@ -1,7 +1,9 @@
 package com.example.gotogether.presentation.screens.reviews_screen.components
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,13 +20,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.gotogether.R
 import com.example.gotogether.domain.review.Review
+import com.example.gotogether.ui.theme.DarkGreen
 import com.example.gotogether.ui.theme.MediumGray
 import com.example.gotogether.ui.theme.PurpleGrey80
 import com.example.gotogether.utils.converter.RatingConverter
@@ -40,6 +46,7 @@ fun ReviewInfo(
     Column(
         modifier = Modifier.background(Color.White).padding(16.dp)
     ) {
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -56,8 +63,13 @@ fun ReviewInfo(
                     .clip(CircleShape)
 
             ) {
+                val bitmap = review.reviewerPicture?.let {
+                    BitmapFactory.decodeByteArray(it, 0, it.size)
+                }?.asImageBitmap()
+
                 Image(
-                    painter = painterResource(R.drawable.tuqui),
+                    bitmap = bitmap
+                        ?: ImageBitmap.imageResource(id = R.drawable.test_avatar),
                     contentDescription = "avatar",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()

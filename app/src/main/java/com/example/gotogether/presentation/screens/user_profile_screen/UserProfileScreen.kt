@@ -143,12 +143,12 @@ fun UserProfileScreen(
                             }
                         }
                     }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                    Column(
                         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 20.dp)
                     ) {
                         if (user.avgRating != null) {
                             Row(
+                                verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.clickable(
                                     onClick = {
                                         navController.navigate("reviews/${user.userUuid}")
@@ -173,7 +173,23 @@ fun UserProfileScreen(
                                     contentDescription = "right",
                                     tint = MediumGray
                                 )
-
+                            }
+                            if(user.avgDrivingSkills != null) {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.DirectionsCar,
+                                        contentDescription = "star",
+                                        tint = Purple
+                                    )
+                                    Text(
+                                        text = "${user.avgDrivingSkills.roundTo2DecimalPlaces()} - Навички водіння",
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = DarkGray,
+                                        modifier = Modifier.padding(top = 2.dp)
+                                    )
+                                }
                             }
                         } else {
                             Text(

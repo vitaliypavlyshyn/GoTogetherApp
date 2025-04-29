@@ -4,10 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.gotogether.domain.review.GetRatingUseCase
-import com.example.gotogether.domain.review.GetReviewsUseCase
+import com.example.gotogether.domain.review.GetReviewsByReviewedUuidUseCase
 import com.example.gotogether.domain.review.Rating
 import com.example.gotogether.domain.review.Review
-import com.example.gotogether.domain.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReviewsViewModel @Inject constructor(
-    private val getReviewsUseCase: GetReviewsUseCase,
+    private val getReviewsUseCase: GetReviewsByReviewedUuidUseCase,
     private val getRatingUseCase: GetRatingUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {

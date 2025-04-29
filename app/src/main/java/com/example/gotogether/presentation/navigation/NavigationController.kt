@@ -1,19 +1,18 @@
 package com.example.gotogether.presentation.navigation
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.gotogether.domain.RouteCoordinates
+import com.example.gotogether.presentation.screens.reviewable_list_trip_screen.ReviewableListTripScreen
+import com.example.gotogether.presentation.screens.write_review_screen.WriteReviewScreen
 import com.example.gotogether.presentation.screens.detailed_proposition_screen.DetailedPropositionScreen
 import com.example.gotogether.presentation.screens.detailed_trip_screen.DetailedTripScreen
-import com.example.gotogether.presentation.screens.detailed_trip_screen.DetailedTripViewModel
 import com.example.gotogether.presentation.screens.google_maps_screen.GoogleMapsScreen
 import com.example.gotogether.presentation.screens.login_screen.LoginScreen
 import com.example.gotogether.presentation.screens.my_propositions_screen.MyPropositionsScreen
@@ -162,6 +161,16 @@ fun NavigationController(
         composable(NavRoutes.DetailedProposition.route + "/{tripId}") {
             DetailedPropositionScreen(
                 navController = navController,
+            )
+        }
+        composable(NavRoutes.ReviewableListTrip.route + "/{tripId}") {
+            ReviewableListTripScreen(
+                navController = navController
+            )
+        }
+        composable(NavRoutes.WriteReview.route + "/{tripId}/{userUuid}") {
+            WriteReviewScreen(
+                navController = navController
             )
         }
     }

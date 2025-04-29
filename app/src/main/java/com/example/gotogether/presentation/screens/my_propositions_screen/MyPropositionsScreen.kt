@@ -18,11 +18,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -75,6 +77,8 @@ fun MyPropositionsScreen(
             )
         } else {
             myPropositionsState.value.trips?.onSuccess { trips ->
+
+
                 val today = LocalDate.now()
 
                 val groupedTrips = trips.groupBy { trip ->
@@ -95,6 +99,7 @@ fun MyPropositionsScreen(
                         expandedDates[date.toString()] = true
                     }
                 }
+
 
                 if (trips.isNotEmpty()) {
                     Column(
@@ -164,16 +169,12 @@ fun MyPropositionsScreen(
                                             )
                                         }
                                     items(sortedTripsForDate.size) {
-                                        AnimatedVisibility(
-                                            visible = true,
-                                            enter = expandVertically(),
-                                            exit = shrinkVertically()
-                                        ) {
-                                            MyPropositionCard(
-                                                navController = navController,
-                                                trip = sortedTripsForDate[it]
-                                            )
-                                        }
+
+                                        MyPropositionCard(
+                                            navController = navController,
+                                            trip = sortedTripsForDate[it],
+                                            reviewableUsersMap = myPropositionsState.value.reviewableUsersMap
+                                        )
                                         Spacer(modifier = Modifier.height(8.dp))
                                     }
                                 }

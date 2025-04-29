@@ -163,14 +163,14 @@ fun ProfileScreen(
                                             tint = Purple
                                         )
                                         Text(
-                                            text = user.avgRating.roundTo2DecimalPlaces()
-                                                .toString(),
+                                            text = "${user.avgRating.roundTo2DecimalPlaces()} - ${user.countReviews} відгуків",
                                             fontSize = 16.sp,
                                             fontWeight = FontWeight.Medium,
                                             color = DarkGray,
                                             modifier = Modifier.padding(top = 2.dp)
                                         )
                                     }
+
                                 } else {
                                     Text(
                                         text = "Відгуків немає",

@@ -1,5 +1,6 @@
 package com.example.gotogether.presentation.screens.detailed_trip_screen.components
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -21,7 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -60,8 +64,13 @@ fun PassengersColumn(
                             .clip(CircleShape)
 
                     ) {
+                        val bitmap = passengers[index].pictureProfile?.let {
+                            BitmapFactory.decodeByteArray(it, 0, it.size)
+                        }?.asImageBitmap()
+
                         Image(
-                            painter = painterResource(R.drawable.tuqui),
+                            bitmap = bitmap
+                                ?: ImageBitmap.imageResource(id = R.drawable.test_avatar),
                             contentDescription = "avatar",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()

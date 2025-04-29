@@ -4,7 +4,7 @@ import com.example.gotogether.domain.trip.Trip
 import com.example.gotogether.utils.mapper.TimeMapper
 
 data class TripDTO(
-    val tripId: Long?,
+    val tripId: Long,
     val driverUuid: String,
     val driverFirstName: String,
     val driverLastName: String,

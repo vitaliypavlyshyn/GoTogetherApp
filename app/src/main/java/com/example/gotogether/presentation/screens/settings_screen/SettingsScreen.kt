@@ -123,12 +123,33 @@ fun SettingsScreen(
         Row(
             modifier = Modifier.fillMaxWidth().clickable(
                 onClick = {
-
+                    settingsViewModel.exportMyBookedTripsToJson(context)
                 }
             )
         ) {
             Text(
                 text = "Завантажити історію поїздок",
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp,
+                color = Purple
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = "right",
+                tint = Purple
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth().clickable(
+                onClick = {
+                    settingsViewModel.exportMyPropositionsToJson(context)
+                }
+            )
+        ) {
+            Text(
+                text = "Завантажити історію моїх пропозицій",
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp,
                 color = Purple

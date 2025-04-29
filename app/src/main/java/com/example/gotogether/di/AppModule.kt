@@ -40,13 +40,14 @@ import com.example.gotogether.domain.location.GetLocationsUseCase
 import com.example.gotogether.domain.login.LoginUseCase
 import com.example.gotogether.domain.registration.RegistrationUseCase
 import com.example.gotogether.domain.review.GetRatingUseCase
-import com.example.gotogether.domain.review.GetReviewsUseCase
+import com.example.gotogether.domain.review.GetReviewsByReviewedUuidUseCase
+import com.example.gotogether.domain.review.GetReviewsByReviewerUuidUseCase
 import com.example.gotogether.domain.trip.usecase.DeleteTripUseCase
 import com.example.gotogether.domain.trip.usecase.GetDetailedTripByIdUseCase
 import com.example.gotogether.domain.trip.usecase.GetTripsByDateUseCase
-import com.example.gotogether.domain.trip.usecase.GetTripsByDriverUuid
-import com.example.gotogether.domain.trip.usecase.GetTripsByPassengerUuid
-import com.example.gotogether.domain.trip.usecase.GetTripsByRequesterUuid
+import com.example.gotogether.domain.trip.usecase.GetTripsByDriverUuidUseCase
+import com.example.gotogether.domain.trip.usecase.GetTripsByPassengerUuidUseCase
+import com.example.gotogether.domain.trip.usecase.GetTripsByRequesterUuidUseCase
 import com.example.gotogether.domain.trip.usecase.PostTripUseCase
 import com.example.gotogether.domain.trip.usecase.PutTripUseCase
 import com.example.gotogether.domain.trip_passenger.usecase.DeletePassengerUseCase
@@ -93,7 +94,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://ce38-46-173-105-195.ngrok-free.app")
+            .baseUrl("https://af6d-46-173-105-195.ngrok-free.app")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -195,21 +196,21 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetTripsByDriverUuid(repository: TripRepository): GetTripsByDriverUuid {
-        return GetTripsByDriverUuid(repository)
+    fun provideGetTripsByDriverUuid(repository: TripRepository): GetTripsByDriverUuidUseCase {
+        return GetTripsByDriverUuidUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun provideGetTripsByPassengerUuid(repository: TripRepository): GetTripsByPassengerUuid {
-        return GetTripsByPassengerUuid(repository)
+    fun provideGetTripsByPassengerUuid(repository: TripRepository): GetTripsByPassengerUuidUseCase {
+        return GetTripsByPassengerUuidUseCase(repository)
     }
 
 
     @Provides
     @Singleton
-    fun provideGetTripsByRequesterUuid(repository: TripRepository): GetTripsByRequesterUuid {
-        return GetTripsByRequesterUuid(repository)
+    fun provideGetTripsByRequesterUuid(repository: TripRepository): GetTripsByRequesterUuidUseCase {
+        return GetTripsByRequesterUuidUseCase(repository)
     }
 
     @Provides
@@ -332,8 +333,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetReviewsUseCase(repository: ReviewRepository): GetReviewsUseCase {
-        return GetReviewsUseCase(repository)
+    fun provideGetReviewsByReviewedUuidUseCase(repository: ReviewRepository): GetReviewsByReviewedUuidUseCase {
+        return GetReviewsByReviewedUuidUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetReviewsByReviewerUuidUseCase(repository: ReviewRepository): GetReviewsByReviewerUuidUseCase {
+        return GetReviewsByReviewerUuidUseCase(repository)
     }
 
     @Provides

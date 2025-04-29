@@ -40,6 +40,14 @@ object UserValidator {
         return null
     }
 
+    fun validateComment(input: String): String?  {
+        if (input.isBlank()) return null
+        if ((input.length > 150) && (input.length < 10)) {
+            return "Опис має бути від 10 до 150 символів."
+        }
+        return null
+    }
+
     fun validatePhoneNumber(input: String): String?  {
         if (input.isBlank()) return null
         if (input.length != 10) {

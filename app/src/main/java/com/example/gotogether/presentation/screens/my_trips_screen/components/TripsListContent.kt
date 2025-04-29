@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gotogether.domain.trip.Trip
+import com.example.gotogether.presentation.screens.my_trips_screen.MyTripsViewModel.TripPreviewWithDriverReviewStatus
 import com.example.gotogether.ui.theme.DarkGray
 import com.example.gotogether.utils.formatter.TimeFormatter
 import java.time.LocalDate
@@ -36,15 +37,15 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun TripsListContent(
-    tripsResult: Result<List<Trip>>?,
+    tripPreviewWithDriverReviewStatus: Result<List<TripPreviewWithDriverReviewStatus>>?,
     navController: NavController,
     expandedDates: MutableMap<String, Boolean>,
 ) {
-    tripsResult?.onSuccess { trips ->
+    tripPreviewWithDriverReviewStatus?.onSuccess { tripsPreview ->
         val today = LocalDate.now()
 
-        val groupedTrips = trips.groupBy { trip ->
-            LocalDateTime.parse(trip.startTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        val groupedTrips = tripsPreview.groupBy { tripPreview ->
+            LocalDateTime.parse(tripPreview.trip.startTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
                 .toLocalDate()
         }
 
@@ -56,13 +57,13 @@ fun TripsListContent(
             }
         }
 
-        LaunchedEffect(trips) {
+        LaunchedEffect(tripsPreview) {
             groupedTrips.keys.forEach { date ->
                 expandedDates[date.toString()] = true
             }
         }
 
-        if (trips.isNotEmpty()) {
+        if (tripsPreview.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier
                     .background(Color.White)
@@ -79,13 +80,7 @@ fun TripsListContent(
                                     expandedDates[date.toString()] =
                                         !(expandedDates[date.toString()] ?: false)
                                 }
-                                .padding(vertical = 8.dp)
-                                .animateContentSize(
-                                    animationSpec = tween(
-                                        durationMillis = 300,
-                                        easing = FastOutSlowInEasing
-                                    )
-                                ),
+                                .padding(vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
@@ -105,16 +100,16 @@ fun TripsListContent(
                     }
 
                     if (expandedDates[date.toString()] == true) {
-                        val sortedTripsForDate = tripsForDate.sortedByDescending { trip ->
+                        val sortedTripsForDate = tripsForDate.sortedByDescending { tripPreview ->
                             LocalDateTime.parse(
-                                trip.startTime,
+                                tripPreview.trip.startTime,
                                 DateTimeFormatter.ISO_LOCAL_DATE_TIME
                             )
                         }
                         items(sortedTripsForDate.size) { index ->
                             MyTripCard(
                                 navController = navController,
-                                trip = sortedTripsForDate[index]
+                                tripPreviewWithReviewStatus = sortedTripsForDate[index]
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }

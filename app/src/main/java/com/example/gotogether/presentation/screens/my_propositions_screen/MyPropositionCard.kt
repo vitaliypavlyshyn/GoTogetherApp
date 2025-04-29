@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.AirlineSeatReclineExtra
 import androidx.compose.material.icons.filled.AutoMode
 import androidx.compose.material.icons.filled.DirectionsCarFilled
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -43,7 +44,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.gotogether.R
 import com.example.gotogether.domain.ChosenRoute
+import com.example.gotogether.domain.TripStatus
 import com.example.gotogether.domain.trip.Trip
+import com.example.gotogether.presentation.screens.my_propositions_screen.MyPropositionsViewModel.UserPreview
 import com.example.gotogether.ui.theme.DarkGray
 import com.example.gotogether.ui.theme.DarkGreen
 import com.example.gotogether.ui.theme.DarkWhite
@@ -57,10 +60,41 @@ import com.example.gotogether.utils.formatter.TimeFormatter
 fun MyPropositionCard(
     navController: NavController,
     trip: Trip,
+    reviewableUsersMap: Map<Long, List<UserPreview>>,
     modifier: Modifier = Modifier,
 ) {
     val typeConfirmIcon = remember {
         mutableStateOf(checkTypeConfirmIcon(trip.isFastConfirm))
+    }
+    val reviewableUsers = reviewableUsersMap[trip.tripId].orEmpty()
+    if (reviewableUsers.isNotEmpty() &&
+        trip.status != TripStatus.SCHEDULED.status &&
+        trip.status != TripStatus.CANCELED.status
+        ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+                .clickable(
+                    onClick = {
+                        navController.navigate("reviewable_list_trip/${trip.tripId}")
+                    }
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                imageVector = Icons.Default.StarBorder,
+                contentDescription = "rating",
+                tint = Purple
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Залишити відгук",
+                color = Purple,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
     Card(
         modifier = Modifier

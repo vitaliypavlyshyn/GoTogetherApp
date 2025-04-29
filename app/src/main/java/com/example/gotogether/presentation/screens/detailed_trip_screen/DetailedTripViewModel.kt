@@ -155,16 +155,10 @@ class DetailedTripViewModel @Inject constructor(
                             seatsBooked = ChosenRoute.seatsCount
                         )
                     )
-                    val passengerIsMe = passengers.firstOrNull { it.passengerUuid == user.userUuid }
-                    val availableSeats = if (passengerIsMe != null) {
-                        currentTrip.availableSeats - passengerIsMe.seatsBooked
-                    } else {
-                        currentTrip.availableSeats
-                    }
                     putTripUseCase(
                         tripId,
                         UpdateTripRequest(
-                            availableSeats = availableSeats
+                            availableSeats = currentTrip.availableSeats - ChosenRoute.seatsCount
                         )
                     )
                 }

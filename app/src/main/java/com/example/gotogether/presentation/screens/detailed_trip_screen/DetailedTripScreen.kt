@@ -2,6 +2,7 @@ package com.example.gotogether.presentation.screens.detailed_trip_screen
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -51,9 +52,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -294,8 +298,13 @@ fun DetailedTripScreen(
                                     .padding(4.dp)
                                     .clip(CircleShape)
                             ) {
+                                val bitmap = trip.driverPicture?.let {
+                                    BitmapFactory.decodeByteArray(it, 0, it.size)
+                                }?.asImageBitmap()
+
                                 Image(
-                                    painter = painterResource(R.drawable.test_avatar),
+                                    bitmap = bitmap
+                                        ?: ImageBitmap.imageResource(id = R.drawable.test_avatar),
                                     contentDescription = "avatar",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier.fillMaxSize()
@@ -453,6 +462,7 @@ fun DetailedTripScreen(
                                     color = MediumGray,
                                     modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                                 )
+                                Spacer(Modifier.height(8.dp))
                                 PassengersColumn(
                                     passengers = passengers,
                                     navController = navController

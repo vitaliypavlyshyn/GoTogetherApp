@@ -92,6 +92,7 @@ class TripsListViewModel @Inject constructor(
     data class TripsState(
         val user: Result<User>? = null,
         val trips: Result<List<Trip>>? = null,
-        val isLoading: Boolean = false
+        val isLoading: Boolean = false,
+        val requestStatus: String? = null
     )
 }

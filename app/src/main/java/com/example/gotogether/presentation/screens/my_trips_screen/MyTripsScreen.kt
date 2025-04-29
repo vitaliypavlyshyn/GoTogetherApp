@@ -92,7 +92,7 @@ fun MyTripsScreen(
                 when (selectedTabIndex) {
                     0 -> {
                         TripsListContent(
-                            tripsResult = myTripsState.value.bookedTrips,
+                            tripPreviewWithDriverReviewStatus = myTripsState.value.bookedTrips,
                             navController = navController,
                             expandedDates = expandedDates
                         )
@@ -100,7 +100,7 @@ fun MyTripsScreen(
 
                     1 -> {
                         TripsListContent(
-                            tripsResult = myTripsState.value.requests,
+                            tripPreviewWithDriverReviewStatus = myTripsState.value.requests,
                             navController = navController,
                             expandedDates = expandedDates
                         )

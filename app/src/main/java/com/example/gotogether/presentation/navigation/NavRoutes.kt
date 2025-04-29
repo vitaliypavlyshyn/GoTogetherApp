@@ -19,4 +19,6 @@ sealed class NavRoutes(val route: String) {
     object ChangeInfo : NavRoutes("change_info")
     object Settings : NavRoutes("settings")
     object DetailedProposition : NavRoutes("detailed_proposition")
+    object ReviewableListTrip : NavRoutes("reviewable_list_trip")
+    object WriteReview : NavRoutes("write_review")
 }
